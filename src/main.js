@@ -10,4 +10,4 @@ const routePresenter = new RoutePresenter();
 render (new Filter,containerFilterPlace,RenderPosition.BEFOREEND);
 render (new Sort,containerPlace,RenderPosition.BEFOREEND);
 
-routePresenter.itin(containerPlace);
+routePresenter.init(containerPlace);
