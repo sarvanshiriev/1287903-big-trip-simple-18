@@ -7,7 +7,7 @@ const containerFilterPlace = document.querySelector('.trip-controls__filters');
 const containerPlace = document.querySelector('.trip-events');
 const routePresenter = new RoutePresenter();
 
-render (new Filter,containerFilterPlace,RenderPosition.BEFOREEND);
-render (new Sort,containerPlace,RenderPosition.BEFOREEND);
+render (new Filter () , containerFilterPlace , RenderPosition.BEFOREEND);
+render (new Sort () , containerPlace , RenderPosition.BEFOREEND);
 
 routePresenter.init(containerPlace);

@@ -4,14 +4,14 @@ import PointList from '../view/point-list';
 import { render } from '../render';
 
 export default class RoutePresenter {
-  formList = new PointList();
+  formList = new PointList ();
 
   init = (containerElement) => {
     this.containerElement = containerElement;
-    render(new FormAdd,this.formList.getElement());
+    render(new FormAdd () , this.formList.getElement());
     for (let i = 0;i < 3; i++) {
-      render(new PointRoute,this.formList.getElement());
+      render(new PointRoute () , this.formList.getElement());
     }
-    render(this.formList,containerElement);
+    render(this.formList , containerElement);
   };
 }
