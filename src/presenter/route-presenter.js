@@ -11,9 +11,10 @@ export default class RoutePresenter {
     this.pointModel = pointModel;
     this.routePoints = [...this.pointModel.getPoints()];
     this.destinations = [...this.pointModel.getDestinationsData()];
+    this.offers = [...this.pointModel.getOffers()];
     render(new FormAdd () , this.formList.getElement());
     for (let i = 0;i < this.routePoints.length; i++) {
-      render(new PointRouteView(this.routePoints[i],this.destinations), this.formList.getElement());
+      render(new PointRouteView(this.routePoints[i],this.destinations,this.offers), this.formList.getElement());
     }
     render(this.formList , containerElement);
   };

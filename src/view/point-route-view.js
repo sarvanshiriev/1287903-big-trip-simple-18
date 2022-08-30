@@ -1,21 +1,45 @@
 import {createElement} from '../render.js';
+import { humanizePointDate } from '../utils.js';
 
-const createPointRouteTemplate = (pointRoute,destinations) =>{
-  const {id,basePrice,dateFrom,dateTo,destination,typePointRoute} = pointRoute;
+const createOffersTemplate = (offers) => {
+  const offerTemplate = offers.map(({id,title,price}) =>
+    `<li class="event__offer" id='${id}'>
+  <span class="event__offer-title">${title}</span>
+  &plus;&euro;&nbsp;
+  <span class="event__offer-price">${price}</span>
+   </li>`
+  );
+  return offerTemplate.join('');
+
+};
+
+const createPointRouteTemplate = (pointRoute,destinations,offers) => {
+  const {basePrice,dateFrom,dateTo,destination,type} = pointRoute;
+
+  const offersByType = offers.find((element) => element.type === type);
+  const offersSelect = offersByType.offers.filter((element) => pointRoute.offersPoint.includes(element.id));
+
   const destinationName = destinations.find((element) => element.id === destination).name;
+
+  const dateMarkup = humanizePointDate(dateFrom, 'YYYY-MM-DD');
+  const dateDisplay = humanizePointDate(dateFrom, 'MMM D');
+  const dateTimeMarkupFrom = humanizePointDate(dateFrom, 'YYYY-MM-DDTHH:mm');
+  const dateTimeDisplayFrom = humanizePointDate(dateFrom, 'H:mm');
+  const dateTimeMarkupTo = humanizePointDate(dateTo, 'YYYY-MM-DDTHH:mm');
+  const dateTimeDisplayTo = humanizePointDate(dateTo, 'H:mm');
   return (
     `
 <div class="event">
-<time class="event__date" datetime="2019-03-18">MAR 18</time>
+<time class="event__date" datetime=${dateMarkup}>${dateDisplay}</time>
 <div class="event__type">
-  <img class="event__type-icon" width="42" height="42" src="img/icons/${typePointRoute}.png" alt="Event type icon">
+  <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
 </div>
-<h3 class="event__title">${typePointRoute} ${destinationName}</h3>
+<h3 class="event__title">${type} ${destinationName}</h3>
 <div class="event__schedule">
   <p class="event__time">
-    <time class="event__start-time" datetime="2019-03-18T10:30">10:30</time>
+    <time class="event__start-time" datetime=${dateTimeMarkupFrom}>${dateTimeDisplayFrom}</time>
     &mdash;
-    <time class="event__end-time" datetime="2019-03-18T11:00">11:00</time>
+    <time class="event__end-time" datetime=${dateTimeMarkupTo}>${dateTimeDisplayTo}</time>
   </p>
 </div>
 <p class="event__price">
@@ -23,11 +47,7 @@ const createPointRouteTemplate = (pointRoute,destinations) =>{
 </p>
 <h4 class="visually-hidden">Offers:</h4>
 <ul class="event__selected-offers">
-  <li class="event__offer">
-    <span class="event__offer-title">Order Uber</span>
-    &plus;&euro;&nbsp;
-    <span class="event__offer-price">20</span>
-  </li>
+  ${createOffersTemplate(offersSelect)}
 </ul>
 <button class="event__rollup-btn" type="button">
   <span class="visually-hidden">Open event</span>
@@ -38,13 +58,14 @@ const createPointRouteTemplate = (pointRoute,destinations) =>{
 };
 
 export default class PointRouteView {
-  constructor (pointRoute,destinations) {
+  constructor (pointRoute,destinations,offers) {
     this.pointRoute = pointRoute;
     this.destinations = destinations;
+    this.offers = offers;
   }
 
   getTemplate() {
-    return createPointRouteTemplate(this.pointRoute,this.destinations);
+    return createPointRouteTemplate(this.pointRoute,this.destinations,this.offers);
   }
 
   getElement() {
