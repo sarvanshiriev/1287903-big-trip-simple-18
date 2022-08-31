@@ -13,4 +13,5 @@ const getRandomArrayElement = function (targetArray) {
   return targetArray[getRandomInteger(0, targetArray.length - 1)];
 };
 const humanizePointDate = (date, format) => dayjs.utc(date).format(format);
-export {getRandomInteger, getRandomArrayElement,humanizePointDate};
+const getRandomElementsFromArray = (targetArray,count) => targetArray.slice().sort(() => Math.random() - 0.5).slice(0, count);
+export {getRandomInteger, getRandomArrayElement,humanizePointDate,getRandomElementsFromArray};

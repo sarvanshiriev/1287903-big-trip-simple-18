@@ -17,7 +17,7 @@ const createPointRouteTemplate = (pointRoute,destinations,offers) => {
   const {basePrice,dateFrom,dateTo,destination,type} = pointRoute;
 
   const offersByType = offers.find((element) => element.type === type);
-  const offersSelect = offersByType.offers.filter((element) => pointRoute.offersPoint.includes(element.id));
+  const offersSelect = offersByType.offers.filter((element) => pointRoute.offersAll.includes(element.id));
 
   const destinationName = destinations.find((element) => element.id === destination).name;
 

@@ -106,6 +106,7 @@ const OFFERS = [
         title:'Add meal',
         price:60,
       },
+
     ]
   },
   {type: 'ship',
@@ -133,6 +134,11 @@ const OFFERS = [
         id:2,
         title:'Switch to comfort',
         price:40,
+      },
+      {
+        id:3,
+        title:'Add comfort place',
+        price:20,
       },
     ]
   },
@@ -167,6 +173,11 @@ const OFFERS = [
         title:'Travel by train',
         price:220,
       },
+      {
+        id:3,
+        title:'Switch to comfort',
+        price:150,
+      },
     ]
   },
   {type: 'sightseeing',
@@ -188,6 +199,11 @@ const OFFERS = [
       {
         id:2,
         title:'Upgrade to a business class',
+        price:100,
+      },
+      {
+        id:3,
+        title:'Add comfort place',
         price:100,
       },
     ]

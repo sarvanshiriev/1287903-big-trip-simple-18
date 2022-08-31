@@ -1,6 +1,5 @@
-import { getRandomArrayElement,getRandomInteger } from '../utils';
+import { getRandomArrayElement,getRandomInteger,getRandomElementsFromArray } from '../utils';
 import {TRIP_TYPES,DESTINATIONS,OFFERS} from './const';
-
 const getArrayId = (type) => {
   const offersByType = OFFERS.find((element) => element.type === type ).offers;
   return offersByType.map((element) => element.id);
@@ -17,7 +16,7 @@ export const generatePointRoute = () => {
     dateTo:'2019-07-11T11:22:13.375Z',
     destination:getRandomArrayElement(DESTINATIONS).id,
     type:typePointRoute,
-    offersPoint
+    offersAll:getRandomElementsFromArray(offersPoint,getRandomInteger(1,offersPoint.length))
   });
 };
 
