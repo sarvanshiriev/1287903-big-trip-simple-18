@@ -5,19 +5,23 @@ import PointList from '../view/point-list';
 import { render } from '../render';
 
 export default class RoutePresenter {
-  formList = new PointList ();
-
+  #formList = new PointList ();
+  #containerElement = null;
+  #pointModel = null;
+  #routePoints = null;
+  #destinations = null;
+  #offers = null;
   init = (containerElement,pointModel) => {
-    this.containerElement = containerElement;
-    this.pointModel = pointModel;
-    this.routePoints = [...this.pointModel.getPoints()];
-    this.destinations = [...this.pointModel.getDestinationsData()];
-    this.offers = [...this.pointModel.getOffers()];
-    render(new FormAdd (this.routePoints[0],this.destinations,this.offers) , this.formList.getElement());
-    render(new FormEdit (this.routePoints[0],this.destinations,this.offers) , this.formList.getElement());
-    for (let i = 0;i < this.routePoints.length; i++) {
-      render(new PointRouteView(this.routePoints[i],this.destinations,this.offers), this.formList.getElement());
+    this.#containerElement = containerElement;
+    this.#pointModel = pointModel;
+    this.#routePoints = [...this.#pointModel.points];
+    this.#destinations = [...this.#pointModel.destinations];
+    this.#offers = [...this.#pointModel.offers];
+    render(new FormAdd (this.#routePoints[0],this.#destinations,this.#offers) , this.#formList.element);
+    render(new FormEdit (this.#routePoints[0],this.#destinations,this.#offers) , this.#formList.element);
+    for (let i = 0;i < this.#routePoints.length; i++) {
+      render(new PointRouteView(this.#routePoints[i],this.#destinations,this.#offers), this.#formList.element);
     }
-    render(this.formList , containerElement);
+    render(this.#formList , this.#containerElement);
   };
 }

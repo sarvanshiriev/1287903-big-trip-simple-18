@@ -117,26 +117,30 @@ const createFormEditTemplate = (pointRoute,destinations,offers) => {
 };
 
 export default class FormAdd {
+  #pointRoute = null;
+  #destinations = null;
+  #offers = null;
+  #element = null;
   constructor (pointRoute,destinations,offers) {
-    this.pointRoute = pointRoute;
-    this.destinations = destinations;
-    this.offers = offers;
+    this.#pointRoute = pointRoute;
+    this.#destinations = destinations;
+    this.#offers = offers;
   }
 
-  getTemplate() {
-    return createFormEditTemplate(this.pointRoute,this.destinations,this.offers);
+  get template() {
+    return createFormEditTemplate(this.#pointRoute,this.#destinations,this.#offers);
   }
 
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
 
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }
