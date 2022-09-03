@@ -31,7 +31,7 @@ const createOffersTemplate = (offers,offersAll,type) => {
     return (
       `  <div class='event__offer-selector'>
     <input class='event__offer-checkbox  visually-hidden' id='event-offer-${title}-1' type='checkbox' name='event-offer-${title}' ${isChecked()}>
-    <label class='event__offer-label' for='event-offer-${title}'>
+    <label class='event__offer-label' for='event-offer-${title}-1'>
       <span class='event__offer-title'>${title}</span>
       &plus;&euro;&nbsp;
       <span class='event__offer-price'>${price}</span>
@@ -93,6 +93,7 @@ const createFormEditTemplate = (pointRoute,destinations,offers) => {
       </div>
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
       <button class="event__reset-btn" type="reset">Delete</button>
+      <button class="event__rollup-btn" type="button">
       </header>
     <section class="event__details">
       <section class="event__section  event__section--offers">
