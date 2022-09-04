@@ -31,7 +31,7 @@ const createOffersTemplate = (offers,offersAll,type) => {
     return (
       `  <div class='event__offer-selector'>
     <input class='event__offer-checkbox  visually-hidden' id='event-offer-${title}-1' type='checkbox' name='event-offer-${title}' ${isChecked()}>
-    <label class='event__offer-label' for='event-offer-${title}'>
+    <label class='event__offer-label' for='event-offer-${title}-1'>
       <span class='event__offer-title'>${title}</span>
       &plus;&euro;&nbsp;
       <span class='event__offer-price'>${price}</span>
@@ -93,6 +93,7 @@ const createFormEditTemplate = (pointRoute,destinations,offers) => {
       </div>
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
       <button class="event__reset-btn" type="reset">Delete</button>
+      <button class="event__rollup-btn" type="button">
       </header>
     <section class="event__details">
       <section class="event__section  event__section--offers">
@@ -112,26 +113,30 @@ const createFormEditTemplate = (pointRoute,destinations,offers) => {
 };
 
 export default class FormEdit {
+  #pointRoute = null;
+  #destinations = null;
+  #offers = null;
+  #element = null;
   constructor (pointRoute,destinations,offers) {
-    this.pointRoute = pointRoute;
-    this.destinations = destinations;
-    this.offers = offers;
+    this.#pointRoute = pointRoute;
+    this.#destinations = destinations;
+    this.#offers = offers;
   }
 
-  getTemplate() {
-    return createFormEditTemplate(this.pointRoute,this.destinations,this.offers);
+  get template() {
+    return createFormEditTemplate(this.#pointRoute,this.#destinations,this.#offers);
   }
 
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
 
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }
