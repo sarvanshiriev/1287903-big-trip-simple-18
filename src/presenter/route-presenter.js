@@ -2,10 +2,14 @@ import FormEdit from '../view/form-edit-view';
 // import FormAdd from '../view/form-add-view';
 import PointRouteView from '../view/point-route-view';
 import PointList from '../view/point-list';
+import NoPoint from '../view/no-point-view';
+import Sort from '../view/sort';
 import { render } from '../render';
 
 export default class RoutePresenter {
   #formList = new PointList ();
+  #sort = new Sort ();
+  #noPoint = new NoPoint();
   #containerElement = null;
   #pointModel = null;
   #routePoints = null;
@@ -18,10 +22,16 @@ export default class RoutePresenter {
     this.#destinations = [...this.#pointModel.destinations];
     this.#offers = [...this.#pointModel.offers];
     // render(new FormAdd (this.#routePoints[0],this.#destinations,this.#offers) , this.#formList.element);
-    for (let i = 0;i < this.#routePoints.length; i++) {
-      this.#renderPoint(this.#routePoints[i],this.#destinations,this.#offers);
+
+    if (this.#routePoints.length === 0) {
+      render (this.#noPoint, this.#containerElement);
+    } else {
+      render(this.#sort, this.#containerElement);
+      render(this.#formList , this.#containerElement);
+      for (let i = 0;i < this.#routePoints.length; i++) {
+        this.#renderPoint(this.#routePoints[i],this.#destinations,this.#offers);
+      }
     }
-    render(this.#formList , this.#containerElement);
   };
 
   #renderPoint = (pointRoute,destinations,offers) => {
