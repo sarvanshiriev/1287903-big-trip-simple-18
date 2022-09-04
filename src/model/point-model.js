@@ -1,7 +1,7 @@
 import { generatePointRoute } from '../mock/pointRoute';
 import { DESTINATIONS ,OFFERS} from '../mock/const';
 export default class PointModel {
-  #points = Array.from({length:4},generatePointRoute);
+  #points = Array.from({length:10},generatePointRoute);
   #destinations = DESTINATIONS;
   #offers = OFFERS;
   get points () {
