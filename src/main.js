@@ -1,5 +1,5 @@
 import Filter from './view/filter';
-import { render,RenderPosition } from './render';
+import {render} from './framework/render.js';
 import RoutePresenter from './presenter/route-presenter';
 import PointModel from './model/point-model';
 
@@ -8,6 +8,6 @@ const containerPlace = document.querySelector('.trip-events');
 const pointModel = new PointModel();
 const routePresenter = new RoutePresenter();
 
-render (new Filter () , containerFilterPlace , RenderPosition.BEFOREEND);
+render (new Filter () , containerFilterPlace);
 routePresenter.init(containerPlace,pointModel);
 

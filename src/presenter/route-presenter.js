@@ -4,7 +4,7 @@ import PointRouteView from '../view/point-route-view';
 import PointList from '../view/point-list';
 import NoPoint from '../view/no-point-view';
 import Sort from '../view/sort';
-import { render } from '../render';
+import {render} from '../framework/render.js';
 
 export default class RoutePresenter {
   #formList = new PointList ();
