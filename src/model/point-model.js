@@ -1,5 +1,5 @@
-import { generatePointRoute } from '../mock/pointRoute';
-import { DESTINATIONS ,OFFERS} from '../mock/const';
+import { generatePointRoute } from '../mock/pointRoute.js';
+import { DESTINATIONS ,OFFERS} from '../mock/const.js';
 export default class PointModel {
   #points = Array.from({length:10},generatePointRoute);
   #destinations = DESTINATIONS;

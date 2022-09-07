@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { humanizePointDate } from '../utils.js';
+import { humanizePointDate } from '../utils/point-utils.js';
 
 const createOffersTemplate = (offers) => {
   const offerTemplate = offers.map(({id,title,price}) =>
@@ -73,4 +73,14 @@ export default class PointRouteView extends AbstractView {
   get template() {
     return createPointRouteTemplate(this.#pointRoute,this.#destinations,this.#offers);
   }
+
+  setFormOpen = (callback) => {
+    this._callback.formOpen = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formOpenHandler);
+  };
+
+  #formOpenHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.formOpen();
+  };
 }

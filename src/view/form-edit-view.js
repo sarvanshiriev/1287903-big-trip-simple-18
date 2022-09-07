@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { humanizePointDate } from '../utils.js';
+import { humanizePointDate } from '../utils/point-utils.js';
 
 const createTypeTemplate = (offers) => {
   const eventByType = offers.map((element) => element.type );
@@ -127,4 +127,24 @@ export default class FormEdit extends AbstractView {
   get template() {
     return createFormEditTemplate(this.#pointRoute,this.#destinations,this.#offers);
   }
+
+  setFormCLose = (callback) => {
+    this._callback.formClose = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formCloseHandler);
+  };
+
+  #formCloseHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.formClose();
+  };
+
+  setFormSubmit = (callback) => {
+    this._callback.formSubmit = callback;
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+  };
+
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.formSubmit();
+  };
 }

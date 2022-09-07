@@ -1,4 +1,4 @@
-import { getRandomArrayElement,getRandomInteger,getRandomElementsFromArray } from '../utils';
+import { getRandomArrayElement,getRandomInteger,getRandomElementsFromArray } from '../utils/common-utils';
 import {TRIP_TYPES,DESTINATIONS,OFFERS} from './const';
 const getArrayId = (type) => {
   const offersByType = OFFERS.find((element) => element.type === type ).offers;

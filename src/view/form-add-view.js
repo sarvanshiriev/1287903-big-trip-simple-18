@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { humanizePointDate } from '../utils.js';
+import { humanizePointDate } from '../utils/point-utils.js';
 
 const createTypeTemplate = (offers) => {
   const eventByType = offers.map((element) => element.type );

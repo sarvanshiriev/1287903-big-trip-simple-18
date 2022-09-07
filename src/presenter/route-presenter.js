@@ -4,7 +4,7 @@ import PointRouteView from '../view/point-route-view';
 import PointList from '../view/point-list';
 import NoPoint from '../view/no-point-view';
 import Sort from '../view/sort';
-import {render} from '../framework/render.js';
+import {render,replace} from '../framework/render.js';
 
 export default class RoutePresenter {
   #formList = new PointList ();
@@ -38,10 +38,10 @@ export default class RoutePresenter {
     const pointComponent = new PointRouteView(pointRoute,destinations,offers);
     const pointEditComponent = new FormEdit(pointRoute,destinations,offers);
     const replacePointToForm = () => {
-      this.#formList.element.replaceChild( pointEditComponent.element,pointComponent.element);
+      replace( pointEditComponent,pointComponent);
     };
     const replaceFormToPoint = () => {
-      this.#formList.element.replaceChild(pointComponent.element,pointEditComponent.element );
+      replace(pointComponent,pointEditComponent );
     };
     const onEscKeyDown = (evt) => {
       if (evt.key === 'Escape' || evt.key === 'Esc') {
@@ -50,15 +50,15 @@ export default class RoutePresenter {
         document.removeEventListener('keydown' , onEscKeyDown );
       }
     };
-    pointComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+    pointComponent.setFormOpen(() => {
       replacePointToForm();
       document.addEventListener('keydown' , onEscKeyDown);
     });
-    pointEditComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+    pointEditComponent.setFormCLose(() => {
       replaceFormToPoint();
       document.addEventListener('keydown' , onEscKeyDown);
     });
-    pointEditComponent.element.querySelector('form').addEventListener('submit', () => {
+    pointEditComponent.setFormSubmit(() => {
       replaceFormToPoint();
       document.removeEventListener('keydown' , onEscKeyDown);
     });
