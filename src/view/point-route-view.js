@@ -1,5 +1,5 @@
-import {createElement} from '../render.js';
-import { humanizePointDate } from '../utils.js';
+import AbstractView from '../framework/view/abstract-view.js';
+import { humanizePointDate } from '../utils/point-utils.js';
 
 const createOffersTemplate = (offers) => {
   const offerTemplate = offers.map(({id,title,price}) =>
@@ -57,12 +57,14 @@ const createPointRouteTemplate = (pointRoute,destinations,offers) => {
   );
 };
 
-export default class PointRouteView {
+export default class PointRouteView extends AbstractView {
+
   #pointRoute = null;
   #destinations = null;
   #offers = null;
-  #element = null;
+
   constructor (pointRoute,destinations,offers) {
+    super();
     this.#pointRoute = pointRoute;
     this.#destinations = destinations;
     this.#offers = offers;
@@ -72,15 +74,13 @@ export default class PointRouteView {
     return createPointRouteTemplate(this.#pointRoute,this.#destinations,this.#offers);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
+  setFormOpen = (callback) => {
+    this._callback.formOpen = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formOpenHandler);
+  };
 
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
-  }
+  #formOpenHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.formOpen();
+  };
 }

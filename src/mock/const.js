@@ -1,4 +1,4 @@
-import {getRandomInteger, getRandomArrayElement } from '../utils';
+import {getRandomInteger, getRandomArrayElement } from '../utils/common-utils';
 
 const TRIP_TYPES = [
   'taxi',

@@ -1,5 +1,5 @@
-import {createElement} from '../render.js';
-import { humanizePointDate } from '../utils.js';
+import AbstractView from '../framework/view/abstract-view.js';
+import { humanizePointDate } from '../utils/point-utils.js';
 
 const createTypeTemplate = (offers) => {
   const eventByType = offers.map((element) => element.type );
@@ -116,12 +116,13 @@ const createFormEditTemplate = (pointRoute,destinations,offers) => {
   );
 };
 
-export default class FormAdd {
+export default class FormAdd extends AbstractView {
   #pointRoute = null;
   #destinations = null;
   #offers = null;
-  #element = null;
+
   constructor (pointRoute,destinations,offers) {
+    super();
     this.#pointRoute = pointRoute;
     this.#destinations = destinations;
     this.#offers = offers;
@@ -129,18 +130,5 @@ export default class FormAdd {
 
   get template() {
     return createFormEditTemplate(this.#pointRoute,this.#destinations,this.#offers);
-  }
-
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }

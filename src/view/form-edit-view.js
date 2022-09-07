@@ -1,5 +1,5 @@
-import {createElement} from '../render.js';
-import { humanizePointDate } from '../utils.js';
+import AbstractView from '../framework/view/abstract-view.js';
+import { humanizePointDate } from '../utils/point-utils.js';
 
 const createTypeTemplate = (offers) => {
   const eventByType = offers.map((element) => element.type );
@@ -112,12 +112,13 @@ const createFormEditTemplate = (pointRoute,destinations,offers) => {
   );
 };
 
-export default class FormEdit {
+export default class FormEdit extends AbstractView {
   #pointRoute = null;
   #destinations = null;
   #offers = null;
-  #element = null;
+
   constructor (pointRoute,destinations,offers) {
+    super();
     this.#pointRoute = pointRoute;
     this.#destinations = destinations;
     this.#offers = offers;
@@ -127,16 +128,23 @@ export default class FormEdit {
     return createFormEditTemplate(this.#pointRoute,this.#destinations,this.#offers);
   }
 
+  setFormCLose = (callback) => {
+    this._callback.formClose = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formCloseHandler);
+  };
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
+  #formCloseHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.formClose();
+  };
 
-    return this.#element;
-  }
+  setFormSubmit = (callback) => {
+    this._callback.formSubmit = callback;
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+  };
 
-  removeElement() {
-    this.#element = null;
-  }
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.formSubmit();
+  };
 }
