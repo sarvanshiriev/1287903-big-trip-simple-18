@@ -1,10 +1,10 @@
+import {render,replace} from '../framework/render.js';
 import FormEdit from '../view/form-edit-view';
 // import FormAdd from '../view/form-add-view';
 import PointRouteView from '../view/point-route-view';
 import PointList from '../view/point-list';
 import NoPoint from '../view/no-point-view';
 import Sort from '../view/sort';
-import {render,replace} from '../framework/render.js';
 
 export default class RoutePresenter {
   #formList = new PointList ();
@@ -12,26 +12,21 @@ export default class RoutePresenter {
   #noPoint = new NoPoint();
   #containerElement = null;
   #pointModel = null;
-  #routePoints = null;
+  #points = null;
   #destinations = null;
   #offers = null;
-  init = (containerElement,pointModel) => {
+
+  constructor (containerElement,pointModel) {
     this.#containerElement = containerElement;
     this.#pointModel = pointModel;
-    this.#routePoints = [...this.#pointModel.points];
+  }
+
+  init = () => {
+    this.#points = [...this.#pointModel.points];
     this.#destinations = [...this.#pointModel.destinations];
     this.#offers = [...this.#pointModel.offers];
     // render(new FormAdd (this.#routePoints[0],this.#destinations,this.#offers) , this.#formList.element);
-
-    if (this.#routePoints.length === 0) {
-      render (this.#noPoint, this.#containerElement);
-    } else {
-      render(this.#sort, this.#containerElement);
-      render(this.#formList , this.#containerElement);
-      for (let i = 0;i < this.#routePoints.length; i++) {
-        this.#renderPoint(this.#routePoints[i],this.#destinations,this.#offers);
-      }
-    }
+    this.#renderTripPoints();
   };
 
   #renderPoint = (pointRoute,destinations,offers) => {
@@ -63,7 +58,30 @@ export default class RoutePresenter {
       document.removeEventListener('keydown' , onEscKeyDown);
     });
     render (pointComponent,this.#formList.element);
+  };
 
+  #renderNoPoint = () => {
+    render (this.#noPoint, this.#containerElement);
+  };
+
+  #renderSort = () => {
+    render (this.#sort, this.#containerElement);
+  };
+
+  #rednedFormList = () => {
+    render (this.#formList , this.#containerElement);
+  };
+
+  #renderTripPoints = () => {
+    if (this.#points.length === 0) {
+      this.#renderNoPoint();
+    } else {
+      this.#renderSort();
+      this.#rednedFormList();
+      for (let i = 0;i < this.#points.length; i++) {
+        this.#renderPoint(this.#points[i],this.#destinations,this.#offers);
+      }
+    }
   };
 }
 
