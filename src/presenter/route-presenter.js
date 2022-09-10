@@ -1,17 +1,18 @@
-import {render,replace} from '../framework/render.js';
-import FormEdit from '../view/form-edit-view';
+import {render} from '../framework/render.js';
 // import FormAdd from '../view/form-add-view';
-import PointRouteView from '../view/point-route-view';
+import PointPresenter from './point-presenter.js';
 import PointList from '../view/point-list';
 import NoPoint from '../view/no-point-view';
 import Sort from '../view/sort';
 
 export default class RoutePresenter {
-  #formList = new PointList ();
+  #pointList = new PointList ();
   #sort = new Sort ();
   #noPoint = new NoPoint();
+
   #containerElement = null;
   #pointModel = null;
+
   #points = null;
   #destinations = null;
   #offers = null;
@@ -30,34 +31,8 @@ export default class RoutePresenter {
   };
 
   #renderPoint = (pointRoute,destinations,offers) => {
-    const pointComponent = new PointRouteView(pointRoute,destinations,offers);
-    const pointEditComponent = new FormEdit(pointRoute,destinations,offers);
-    const replacePointToForm = () => {
-      replace( pointEditComponent,pointComponent);
-    };
-    const replaceFormToPoint = () => {
-      replace(pointComponent,pointEditComponent );
-    };
-    const onEscKeyDown = (evt) => {
-      if (evt.key === 'Escape' || evt.key === 'Esc') {
-        evt.preventDefault();
-        replaceFormToPoint();
-        document.removeEventListener('keydown' , onEscKeyDown );
-      }
-    };
-    pointComponent.setFormOpen(() => {
-      replacePointToForm();
-      document.addEventListener('keydown' , onEscKeyDown);
-    });
-    pointEditComponent.setFormCLose(() => {
-      replaceFormToPoint();
-      document.addEventListener('keydown' , onEscKeyDown);
-    });
-    pointEditComponent.setFormSubmit(() => {
-      replaceFormToPoint();
-      document.removeEventListener('keydown' , onEscKeyDown);
-    });
-    render (pointComponent,this.#formList.element);
+    const pointPresenter = new PointPresenter(this.#pointList.element);
+    pointPresenter.init(pointRoute,destinations,offers);
   };
 
   #renderNoPoint = () => {
@@ -69,7 +44,7 @@ export default class RoutePresenter {
   };
 
   #rednedFormList = () => {
-    render (this.#formList , this.#containerElement);
+    render (this.#pointList , this.#containerElement);
   };
 
   #renderTripPoints = () => {
