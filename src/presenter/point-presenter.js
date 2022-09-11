@@ -28,17 +28,17 @@ export default class PointPresenter {
     this.#formEdit.setFormCLose(this.#setFormCLose);
     this.#formEdit.setFormSubmit(this.#setFormSubmit);
 
-    render(this.#pointRouteView,this.#formEdit);
+    render(this.#pointRouteView,this.#containerElement);
   };
 
 
   #replacePointToForm = () => {
-    replace( this.#pointRouteView, this.#formEdit);
+    replace(this.#formEdit,this.#pointRouteView);
     document.addEventListener('keydown' , this.#onEscKeyDown);
   };
 
   #replaceFormToPoint = () => {
-    replace(this.#formEdit,this.#pointRouteView );
+    replace(this.#pointRouteView,this.#formEdit);
     document.addEventListener('keydown' , this.#onEscKeyDown);
   };
 
