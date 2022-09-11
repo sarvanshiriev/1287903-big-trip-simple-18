@@ -16,6 +16,7 @@ export default class RoutePresenter {
   #points = null;
   #destinations = null;
   #offers = null;
+  #pointPresenter = new Map();
 
   constructor (containerElement,pointModel) {
     this.#containerElement = containerElement;
@@ -33,6 +34,7 @@ export default class RoutePresenter {
   #renderPoint = (pointRoute,destinations,offers) => {
     const pointPresenter = new PointPresenter(this.#pointList.element);
     pointPresenter.init(pointRoute,destinations,offers);
+    this.#pointPresenter.set(pointRoute.id,pointPresenter);
   };
 
   #renderNoPoint = () => {
@@ -45,6 +47,11 @@ export default class RoutePresenter {
 
   #rednedFormList = () => {
     render (this.#pointList , this.#containerElement);
+  };
+
+  #clearPointList = () => {
+    this.#pointPresenter.forEach((presenter) => presenter.destroy());
+    this.#pointPresenter.clear();
   };
 
   #renderTripPoints = () => {
