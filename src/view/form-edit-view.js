@@ -145,6 +145,6 @@ export default class FormEdit extends AbstractView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this._callback.formSubmit();
+    this._callback.formSubmit(this.#pointRoute,this.#destinations,this.#offers );
   };
 }

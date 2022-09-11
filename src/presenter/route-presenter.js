@@ -1,69 +1,78 @@
-import FormEdit from '../view/form-edit-view';
+import {render} from '../framework/render.js';
 // import FormAdd from '../view/form-add-view';
-import PointRouteView from '../view/point-route-view';
+import PointPresenter from './point-presenter.js';
 import PointList from '../view/point-list';
 import NoPoint from '../view/no-point-view';
 import Sort from '../view/sort';
-import {render,replace} from '../framework/render.js';
-
+import {updateItem} from '../utils/common-utils.js';
 export default class RoutePresenter {
-  #formList = new PointList ();
+  #pointList = new PointList ();
   #sort = new Sort ();
   #noPoint = new NoPoint();
+
   #containerElement = null;
   #pointModel = null;
-  #routePoints = null;
+
+  #points = null;
   #destinations = null;
   #offers = null;
-  init = (containerElement,pointModel) => {
+  #pointPresenter = new Map();
+
+  constructor (containerElement,pointModel) {
     this.#containerElement = containerElement;
     this.#pointModel = pointModel;
-    this.#routePoints = [...this.#pointModel.points];
+  }
+
+  init = () => {
+    this.#points = [...this.#pointModel.points];
     this.#destinations = [...this.#pointModel.destinations];
     this.#offers = [...this.#pointModel.offers];
     // render(new FormAdd (this.#routePoints[0],this.#destinations,this.#offers) , this.#formList.element);
+    this.#renderTripPoints();
+  };
 
-    if (this.#routePoints.length === 0) {
-      render (this.#noPoint, this.#containerElement);
-    } else {
-      render(this.#sort, this.#containerElement);
-      render(this.#formList , this.#containerElement);
-      for (let i = 0;i < this.#routePoints.length; i++) {
-        this.#renderPoint(this.#routePoints[i],this.#destinations,this.#offers);
-      }
-    }
+  #onModeChange = () => {
+    this.#pointPresenter.forEach((presenter) => presenter.resetView());
+  };
+
+  #onPointChange = (updatedPointRoute,destinations,offers) => {
+    this.#points = updateItem(this.#points,updatedPointRoute);
+    this.#pointPresenter.get(updatedPointRoute.id).init(updatedPointRoute,destinations,offers);
   };
 
   #renderPoint = (pointRoute,destinations,offers) => {
-    const pointComponent = new PointRouteView(pointRoute,destinations,offers);
-    const pointEditComponent = new FormEdit(pointRoute,destinations,offers);
-    const replacePointToForm = () => {
-      replace( pointEditComponent,pointComponent);
-    };
-    const replaceFormToPoint = () => {
-      replace(pointComponent,pointEditComponent );
-    };
-    const onEscKeyDown = (evt) => {
-      if (evt.key === 'Escape' || evt.key === 'Esc') {
-        evt.preventDefault();
-        replaceFormToPoint();
-        document.removeEventListener('keydown' , onEscKeyDown );
-      }
-    };
-    pointComponent.setFormOpen(() => {
-      replacePointToForm();
-      document.addEventListener('keydown' , onEscKeyDown);
-    });
-    pointEditComponent.setFormCLose(() => {
-      replaceFormToPoint();
-      document.addEventListener('keydown' , onEscKeyDown);
-    });
-    pointEditComponent.setFormSubmit(() => {
-      replaceFormToPoint();
-      document.removeEventListener('keydown' , onEscKeyDown);
-    });
-    render (pointComponent,this.#formList.element);
+    const pointPresenter = new PointPresenter(this.#pointList.element,this.#onPointChange,this.#onModeChange);
+    pointPresenter.init(pointRoute,destinations,offers);
+    this.#pointPresenter.set(pointRoute.id,pointPresenter);
+  };
 
+  #renderNoPoint = () => {
+    render (this.#noPoint, this.#containerElement);
+  };
+
+  #renderSort = () => {
+    render (this.#sort, this.#containerElement);
+  };
+
+  #rednedFormList = () => {
+    render (this.#pointList , this.#containerElement);
+  };
+
+  #clearPointList = () => {
+    this.#pointPresenter.forEach((presenter) => presenter.destroy());
+    this.#pointPresenter.clear();
+  };
+
+  #renderTripPoints = () => {
+    if (this.#points.length === 0) {
+      this.#renderNoPoint();
+    } else {
+      this.#renderSort();
+      this.#rednedFormList();
+      for (let i = 0;i < this.#points.length; i++) {
+        this.#renderPoint(this.#points[i],this.#destinations,this.#offers);
+      }
+    }
   };
 }
 
