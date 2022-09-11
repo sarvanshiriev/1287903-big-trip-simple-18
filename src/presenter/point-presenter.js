@@ -2,17 +2,28 @@ import { render,replace,remove } from '../framework/render.js';
 import PointRouteView from '../view/point-route-view';
 import FormEdit from '../view/form-edit-view';
 
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
+};
 export default class PointPresenter {
   #pointRoute = null;
   #destinations = null;
   #offers = null;
 
+  #changeData = null;
+  #changeMode = null;
+
   #containerElement = null;
   #pointRouteView = null;
   #formEdit = null;
 
-  constructor (containerElement) {
+  #mode = Mode.DEFAULT;
+
+  constructor (containerElement,changeData,changeMode) {
     this.#containerElement = containerElement;
+    this.#changeData = changeData;
+    this.#changeMode = changeMode;
   }
 
   init = (pointRoute,destinations,offers) => {
@@ -37,11 +48,11 @@ export default class PointPresenter {
       return;
     }
 
-    if (this.#containerElement.contains(prevPointRouteView.element)) {
+    if (this.#mode === Mode.DEFAULT) {
       replace(this.#pointRouteView,prevPointRouteView);
     }
 
-    if (this.#containerElement.contains(prevFormEdit.element)) {
+    if (this.#mode === Mode.EDITING) {
       replace(this.#formEdit,prevFormEdit);
     }
     remove(prevPointRouteView);
@@ -53,14 +64,23 @@ export default class PointPresenter {
     remove(this.#formEdit);
   };
 
+  resetView = () => {
+    if(this.#mode !== Mode.DEFAULT) {
+      this.#replaceFormToPoint();
+    }
+  };
+
   #replacePointToForm = () => {
     replace(this.#formEdit,this.#pointRouteView);
     document.addEventListener('keydown' , this.#onEscKeyDown);
+    this.#changeMode();
+    this.#mode = Mode.EDITING;
   };
 
   #replaceFormToPoint = () => {
     replace(this.#pointRouteView,this.#formEdit);
     document.addEventListener('keydown' , this.#onEscKeyDown);
+    this.#mode = Mode.DEFAULT;
   };
 
   #onEscKeyDown = (evt) => {
@@ -78,7 +98,8 @@ export default class PointPresenter {
     this.#replaceFormToPoint();
   };
 
-  #setFormSubmit = () => {
+  #setFormSubmit = (pointRoute,destinations,offers) => {
+    this.#changeData(pointRoute,destinations,offers);
     this.#replaceFormToPoint();
   };
 }

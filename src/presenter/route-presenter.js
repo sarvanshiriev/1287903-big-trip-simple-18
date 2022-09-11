@@ -4,7 +4,7 @@ import PointPresenter from './point-presenter.js';
 import PointList from '../view/point-list';
 import NoPoint from '../view/no-point-view';
 import Sort from '../view/sort';
-
+import {updateItem} from '../utils/common-utils.js';
 export default class RoutePresenter {
   #pointList = new PointList ();
   #sort = new Sort ();
@@ -31,8 +31,17 @@ export default class RoutePresenter {
     this.#renderTripPoints();
   };
 
+  #onModeChange = () => {
+    this.#pointPresenter.forEach((presenter) => presenter.resetView());
+  };
+
+  #onPointChange = (updatedPointRoute,destinations,offers) => {
+    this.#points = updateItem(this.#points,updatedPointRoute);
+    this.#pointPresenter.get(updatedPointRoute.id).init(updatedPointRoute,destinations,offers);
+  };
+
   #renderPoint = (pointRoute,destinations,offers) => {
-    const pointPresenter = new PointPresenter(this.#pointList.element);
+    const pointPresenter = new PointPresenter(this.#pointList.element,this.#onPointChange,this.#onModeChange);
     pointPresenter.init(pointRoute,destinations,offers);
     this.#pointPresenter.set(pointRoute.id,pointPresenter);
   };
