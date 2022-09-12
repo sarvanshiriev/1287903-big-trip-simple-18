@@ -40,6 +40,10 @@ export default class RoutePresenter {
     this.#pointPresenter.get(updatedPointRoute.id).init(updatedPointRoute,destinations,offers);
   };
 
+  #onSortTypeChange = (sortType) => {
+
+  };
+
   #renderPoint = (pointRoute,destinations,offers) => {
     const pointPresenter = new PointPresenter(this.#pointList.element,this.#onPointChange,this.#onModeChange);
     pointPresenter.init(pointRoute,destinations,offers);
@@ -52,6 +56,7 @@ export default class RoutePresenter {
 
   #renderSort = () => {
     render (this.#sort, this.#containerElement);
+    this.#sort.setSortTypeChangeHandler(this.#onSortTypeChange);
   };
 
   #rednedFormList = () => {
