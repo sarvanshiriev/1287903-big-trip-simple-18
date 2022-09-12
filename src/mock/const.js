@@ -211,7 +211,7 @@ const OFFERS = [
 ];
 
 const SortType = {
-  DATE: 'date',
+  DAY: 'day',
   PRICE: 'price'
 };
 
