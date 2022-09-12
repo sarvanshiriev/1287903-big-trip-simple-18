@@ -79,7 +79,7 @@ export default class PointPresenter {
 
   #replaceFormToPoint = () => {
     replace(this.#pointRouteView,this.#formEdit);
-    document.addEventListener('keydown' , this.#onEscKeyDown);
+    document.removeEventListener('keydown' , this.#onEscKeyDown);
     this.#mode = Mode.DEFAULT;
   };
 

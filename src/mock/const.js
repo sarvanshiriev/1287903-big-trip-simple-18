@@ -210,5 +210,9 @@ const OFFERS = [
   },
 ];
 
+const SortType = {
+  DAY: 'day',
+  PRICE: 'price'
+};
 
-export {TRIP_TYPES,DESTINATIONS,OFFERS};
+export {TRIP_TYPES,DESTINATIONS,OFFERS,SortType};
