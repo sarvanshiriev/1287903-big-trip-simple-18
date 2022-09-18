@@ -1,4 +1,4 @@
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { humanizePointDate } from '../utils/point-utils.js';
 
 const createTypeTemplate = (offers) => {
@@ -112,20 +112,20 @@ const createFormEditTemplate = (pointRoute,destinations,offers) => {
   );
 };
 
-export default class FormEdit extends AbstractView {
+export default class FormEdit extends AbstractStatefulView {
   #pointRoute = null;
   #destinations = null;
   #offers = null;
 
   constructor (pointRoute,destinations,offers) {
     super();
-    this.#pointRoute = pointRoute;
+    this._state = FormEdit.parsePointToState(pointRoute);
     this.#destinations = destinations;
     this.#offers = offers;
   }
 
   get template() {
-    return createFormEditTemplate(this.#pointRoute,this.#destinations,this.#offers);
+    return createFormEditTemplate(this._state,this.#destinations,this.#offers);
   }
 
   setFormCLose = (callback) => {
@@ -145,6 +145,9 @@ export default class FormEdit extends AbstractView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this._callback.formSubmit(this.#pointRoute,this.#destinations,this.#offers );
+    this._callback.formSubmit(FormEdit.parseStateToPoint(this._state),this.#destinations,this.#offers );
   };
+
+  static parsePointToState = (pointRoute) => ({...pointRoute});
+  static parseStateToPoint = (state) => ({...state});
 }
