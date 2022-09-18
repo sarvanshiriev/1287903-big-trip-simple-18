@@ -122,6 +122,7 @@ export default class FormEdit extends AbstractStatefulView {
     this._state = FormEdit.parsePointToState(pointRoute);
     this.#destinations = destinations;
     this.#offers = offers;
+    this.#setInnerHandlers();
   }
 
   get template() {
@@ -143,11 +144,22 @@ export default class FormEdit extends AbstractStatefulView {
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
   };
 
+  _restoreHandlers = () => {
+    this.#setInnerHandlers();
+    this.setFormSubmit(this._callback.formSubmit);
+    this.setFormCLose();
+  };
+
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
     this._callback.formSubmit(FormEdit.parseStateToPoint(this._state),this.#destinations,this.#offers );
   };
 
+  #setInnerHandlers = () => {
+
+  };
+
   static parsePointToState = (pointRoute) => ({...pointRoute});
-  static parseStateToPoint = (state) => ({...state});
+  static parseStateToPoint = (state) => ({
+    ...state});
 }
