@@ -156,7 +156,9 @@ export default class FormEdit extends AbstractStatefulView {
   };
 
   #setInnerHandlers = () => {
-
+    this.element.addEventListener('change', this.#onOfferChange);
+    this.element.addEventListener('change', this.#onEventTypeChange);
+    this.element.addEventListener('change', this.#onDestinationChange);
   };
 
   static parsePointToState = (pointRoute) => ({...pointRoute});
