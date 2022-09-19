@@ -1,13 +1,13 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { humanizePointDate } from '../utils/point-utils.js';
 
-const createTypeTemplate = (offers) => {
+const createTypeTemplate = (offers,type) => {
   const eventByType = offers.map((element) => element.type );
 
-  return eventByType.map((type) =>
+  return eventByType.map((eventType) =>
     `<div class="event__type-item">
-    <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
-    <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${type}</label>
+    <input id="event-type-${eventType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${eventType}" ${eventType === type ? 'checked' : ''}">
+    <label class="event__type-label  event__type-label--${eventType}" for="event-type-${eventType}-1">${eventType}</label>
   </div>`
   ).join('');
 };
@@ -30,7 +30,7 @@ const createOffersTemplate = (offers,offersAll,type) => {
     };
     return (
       `  <div class='event__offer-selector'>
-    <input class='event__offer-checkbox  visually-hidden' id='event-offer-${title}-1' type='checkbox' name='event-offer-${title}' ${isChecked()}>
+    <input class='event__offer-checkbox  visually-hidden' id='event-offer-${title}-1' type='checkbox' name='event-offer-${title}' data-offer-id="${id}" ${isChecked()}>
     <label class='event__offer-label' for='event-offer-${title}-1'>
       <span class='event__offer-title'>${title}</span>
       &plus;&euro;&nbsp;
@@ -129,6 +129,12 @@ export default class FormEdit extends AbstractStatefulView {
     return createFormEditTemplate(this._state,this.#destinations,this.#offers);
   }
 
+  reset = (pointRoute) => {
+    this.updateElement (
+      FormEdit.parsePointToState(pointRoute)
+    );
+  };
+
   setFormCLose = (callback) => {
     this._callback.formClose = callback;
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formCloseHandler);
@@ -162,6 +168,9 @@ export default class FormEdit extends AbstractStatefulView {
   };
 
   static parsePointToState = (pointRoute) => ({...pointRoute});
-  static parseStateToPoint = (state) => ({
-    ...state});
+
+  static parseStateToPoint = (state) => {
+    const pointRoute = {...state};
+    return pointRoute;
+  };
 }
