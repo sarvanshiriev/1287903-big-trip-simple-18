@@ -1,6 +1,8 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { humanizePointDate } from '../utils/point-utils.js';
+import flatpickr from 'flatpickr';
 
+import 'flatpickr/dist/flatpickr.min.css';
 const createTypeTemplate = (offers,type) => {
   const eventByType = offers.map((element) => element.type );
 
@@ -116,6 +118,8 @@ export default class FormEdit extends AbstractStatefulView {
   #pointRoute = null;
   #destinations = null;
   #offers = null;
+  #dateFromPicker = null;
+  #dateToPicker = null;
 
   constructor (pointRoute,destinations,offers) {
     super();
@@ -123,16 +127,61 @@ export default class FormEdit extends AbstractStatefulView {
     this.#destinations = destinations;
     this.#offers = offers;
     this.#setInnerHandlers();
+    this.#setDatepicker();
   }
 
   get template() {
     return createFormEditTemplate(this._state,this.#destinations,this.#offers);
   }
 
+  removeElement = () => {
+    super.removeElement();
+
+    if (this.#dateFromPicker) {
+      this.#dateFromPicker.destroy();
+      this.#dateFromPicker = null;
+    }
+    if (this.#dateToPicker) {
+      this.#dateToPicker.destroy();
+      this.#dateToPicker = null;
+    }
+  };
+
   reset = (pointRoute) => {
     this.updateElement (
       FormEdit.parsePointToState(pointRoute)
     );
+  };
+
+  #dueDateFromChangeHandler = ([userDate]) => {
+    this.updateElement({
+      dateFrom: userDate,
+    });
+  };
+
+  #dueDateToChangeHandler = ([userDate]) => {
+    this.updateElement({
+      dateTo: userDate,
+    });
+  };
+
+  #setDatepicker = () => {
+
+    this.#dateFromPicker = flatpickr(this.element.querySelector('#event-start-time-1'),
+      {
+        enableTime: true,
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._state.dateFrom,
+        onChange: this.#dueDateFromChangeHandler
+      });
+
+    this.#dateToPicker = flatpickr(this.element.querySelector('#event-end-time-1'),
+      {
+        enableTime: true,
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._state.dateTo,
+        onChange: this.#dueDateToChangeHandler
+      });
   };
 
   setFormCLose = (callback) => {
@@ -159,6 +208,7 @@ export default class FormEdit extends AbstractStatefulView {
     this.#setInnerHandlers();
     this.setFormSubmit(this._callback.formSubmit);
     this.setFormCLose(this._callback.formClose);
+    this.#setDatepicker();
   };
 
   #setInnerHandlers = () => {
