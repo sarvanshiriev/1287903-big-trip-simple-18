@@ -118,7 +118,8 @@ export default class FormEdit extends AbstractStatefulView {
   #pointRoute = null;
   #destinations = null;
   #offers = null;
-  #datepicker = null;
+  #dateFromPicker = null;
+  #dateToPicker = null;
 
   constructor (pointRoute,destinations,offers) {
     super();
@@ -126,6 +127,7 @@ export default class FormEdit extends AbstractStatefulView {
     this.#destinations = destinations;
     this.#offers = offers;
     this.#setInnerHandlers();
+    this.#setDatepicker();
   }
 
   get template() {
@@ -135,9 +137,13 @@ export default class FormEdit extends AbstractStatefulView {
   removeElement = () => {
     super.removeElement();
 
-    if (this.#datepicker) {
-      this.#datepicker.destroy();
-      this.#datepicker = null;
+    if (this.#dateFromPicker) {
+      this.#dateFromPicker.destroy();
+      this.#dateFromPicker = null;
+    }
+    if (this.#dateToPicker) {
+      this.#dateToPicker.destroy();
+      this.#dateToPicker = null;
     }
   };
 
@@ -147,23 +153,35 @@ export default class FormEdit extends AbstractStatefulView {
     );
   };
 
-  #dueDateChangeHandler = ([userDate]) => {
+  #dueDateFromChangeHandler = ([userDate]) => {
     this.updateElement({
-      dueDate: userDate,
+      dateFrom: userDate,
+    });
+  };
+
+  #dueDateToChangeHandler = ([userDate]) => {
+    this.updateElement({
+      dateTo: userDate,
     });
   };
 
   #setDatepicker = () => {
-    if (this._state.isDueDate) {
-      this.#datepicker = flatpickr(
-        this.element.querySelector('.event__input'),
-        {
-          dateFormat: 'j F',
-          defaultDate: this._state.dueDate,
-          onChange: this.#dueDateChangeHandler,
-        },
-      );
-    }
+
+    this.#dateFromPicker = flatpickr(this.element.querySelector('#event-start-time-1'),
+      {
+        enableTime: true,
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._state.dateFrom,
+        onChange: this.#dueDateFromChangeHandler
+      });
+
+    this.#dateToPicker = flatpickr(this.element.querySelector('#event-end-time-1'),
+      {
+        enableTime: true,
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._state.dateTo,
+        onChange: this.#dueDateToChangeHandler
+      });
   };
 
   setFormCLose = (callback) => {
@@ -190,6 +208,7 @@ export default class FormEdit extends AbstractStatefulView {
     this.#setInnerHandlers();
     this.setFormSubmit(this._callback.formSubmit);
     this.setFormCLose(this._callback.formClose);
+    this.#setDatepicker();
   };
 
   #setInnerHandlers = () => {
