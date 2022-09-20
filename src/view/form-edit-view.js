@@ -1,6 +1,8 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { humanizePointDate } from '../utils/point-utils.js';
+import flatpickr from 'flatpickr';
 
+import 'flatpickr/dist/flatpickr.min.css';
 const createTypeTemplate = (offers,type) => {
   const eventByType = offers.map((element) => element.type );
 
@@ -116,6 +118,7 @@ export default class FormEdit extends AbstractStatefulView {
   #pointRoute = null;
   #destinations = null;
   #offers = null;
+  #datepicker = null;
 
   constructor (pointRoute,destinations,offers) {
     super();
@@ -129,10 +132,38 @@ export default class FormEdit extends AbstractStatefulView {
     return createFormEditTemplate(this._state,this.#destinations,this.#offers);
   }
 
+  removeElement = () => {
+    super.removeElement();
+
+    if (this.#datepicker) {
+      this.#datepicker.destroy();
+      this.#datepicker = null;
+    }
+  };
+
   reset = (pointRoute) => {
     this.updateElement (
       FormEdit.parsePointToState(pointRoute)
     );
+  };
+
+  #dueDateChangeHandler = ([userDate]) => {
+    this.updateElement({
+      dueDate: userDate,
+    });
+  };
+
+  #setDatepicker = () => {
+    if (this._state.isDueDate) {
+      this.#datepicker = flatpickr(
+        this.element.querySelector('.event__input'),
+        {
+          dateFormat: 'j F',
+          defaultDate: this._state.dueDate,
+          onChange: this.#dueDateChangeHandler,
+        },
+      );
+    }
   };
 
   setFormCLose = (callback) => {
