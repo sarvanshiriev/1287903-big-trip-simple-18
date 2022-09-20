@@ -1,13 +1,13 @@
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { humanizePointDate } from '../utils/point-utils.js';
 
-const createTypeTemplate = (offers) => {
+const createTypeTemplate = (offers,type) => {
   const eventByType = offers.map((element) => element.type );
 
-  return eventByType.map((type) =>
+  return eventByType.map((eventType) =>
     `<div class="event__type-item">
-    <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
-    <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${type}</label>
+    <input id="event-type-${eventType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${eventType}" ${eventType === type ? 'checked' : ''}>
+    <label class="event__type-label  event__type-label--${eventType}" for="event-type-${eventType}-1">${eventType}</label>
   </div>`
   ).join('');
 };
@@ -30,7 +30,7 @@ const createOffersTemplate = (offers,offersAll,type) => {
     };
     return (
       `  <div class='event__offer-selector'>
-    <input class='event__offer-checkbox  visually-hidden' id='event-offer-${title}-1' type='checkbox' name='event-offer-${title}' ${isChecked()}>
+    <input class='event__offer-checkbox  visually-hidden' id='event-offer-${title}-1' type='checkbox' name='event-offer-${title}' data-offer-id='${id}' ${isChecked(offers,id) ? 'checked' : ''}>
     <label class='event__offer-label' for='event-offer-${title}-1'>
       <span class='event__offer-title'>${title}</span>
       &plus;&euro;&nbsp;
@@ -64,7 +64,7 @@ const createFormEditTemplate = (pointRoute,destinations,offers) => {
         <div class="event__type-list">
           <fieldset class="event__type-group">
           <legend class="visually-hidden">Event type</legend>
-          ${createTypeTemplate(offers)}
+          ${createTypeTemplate(offers,type)}
           </fieldset>
         </div>
       </div>
@@ -112,21 +112,28 @@ const createFormEditTemplate = (pointRoute,destinations,offers) => {
   );
 };
 
-export default class FormEdit extends AbstractView {
+export default class FormEdit extends AbstractStatefulView {
   #pointRoute = null;
   #destinations = null;
   #offers = null;
 
   constructor (pointRoute,destinations,offers) {
     super();
-    this.#pointRoute = pointRoute;
+    this._state = FormEdit.parsePointToState(pointRoute);
     this.#destinations = destinations;
     this.#offers = offers;
+    this.#setInnerHandlers();
   }
 
   get template() {
-    return createFormEditTemplate(this.#pointRoute,this.#destinations,this.#offers);
+    return createFormEditTemplate(this._state,this.#destinations,this.#offers);
   }
+
+  reset = (pointRoute) => {
+    this.updateElement (
+      FormEdit.parsePointToState(pointRoute)
+    );
+  };
 
   setFormCLose = (callback) => {
     this._callback.formClose = callback;
@@ -145,6 +152,68 @@ export default class FormEdit extends AbstractView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this._callback.formSubmit(this.#pointRoute,this.#destinations,this.#offers );
+    this._callback.formSubmit(FormEdit.parseStateToPoint(this._state),this.#destinations,this.#offers );
+  };
+
+  _restoreHandlers = () => {
+    this.#setInnerHandlers();
+    this.setFormSubmit(this._callback.formSubmit);
+    this.setFormCLose(this._callback.formClose);
+  };
+
+  #setInnerHandlers = () => {
+    this.element.addEventListener('change', this.#onOfferChange);
+    this.element.addEventListener('change', this.#onEventTypeChange);
+    this.element.addEventListener('change', this.#onDestinationChange);
+  };
+
+  #onOfferChange = (evt) => {
+    if (!evt.target.closest('input[type="checkbox"].event__offer-checkbox')) {
+      return;
+    }
+
+    evt.preventDefault();
+    const checkedOffers = [...this._state.offersAll];
+    if (evt.target.checked) {
+      checkedOffers.push(Number(evt.target.dataset.offerId));
+    } else {
+      const idIndex = checkedOffers.indexOf(Number(evt.target.dataset.offerId));
+      checkedOffers.splice(idIndex, 1);
+    }
+
+    this.updateElement({
+      offersAll: checkedOffers
+    });
+  };
+
+  #onEventTypeChange = (evt) => {
+    if (!evt.target.closest('input[type="radio"].event__type-input')) {
+      return;
+    }
+
+    evt.preventDefault();
+    this.updateElement({
+      type: evt.target.value,
+      offersAll: []
+    });
+  };
+
+  #onDestinationChange = (evt) => {
+    if (!evt.target.closest('input[type="text"].event__input--destination')) {
+      return;
+    }
+
+    evt.preventDefault();
+    const newDestination = this.#destinations.find((destination) => destination.name === evt.target.value).id;
+    this.updateElement({
+      destination: newDestination
+    });
+  };
+
+  static parsePointToState = (pointRoute) => ({...pointRoute});
+
+  static parseStateToPoint = (state) => {
+    const pointRoute = {...state};
+    return pointRoute;
   };
 }
