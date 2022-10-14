@@ -27,6 +27,18 @@ export default class RoutePresenter {
     this.#pointModel = pointModel;
   }
 
+  get points() {
+    return this.#pointModel.points;
+  }
+
+  get destinations () {
+    return this.#pointModel.destinations;
+  }
+
+  get offers () {
+    return this.#pointModel.offers;
+  }
+
   init = () => {
     this.#points = [...this.#pointModel.points];
     this.#destinations = [...this.#pointModel.destinations];
