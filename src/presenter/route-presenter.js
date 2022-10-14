@@ -4,7 +4,6 @@ import PointPresenter from './point-presenter.js';
 import PointList from '../view/point-list';
 import NoPoint from '../view/no-point-view';
 import Sort from '../view/sort';
-import {updateItem} from '../utils/common-utils.js';
 import { SortType } from '../mock/const.js';
 import {sortPointDay,sortPointPrice} from '../utils/point-utils';
 export default class RoutePresenter {
@@ -15,12 +14,11 @@ export default class RoutePresenter {
   #containerElement = null;
   #pointModel = null;
 
-  #points = null;
   #destinations = null;
   #offers = null;
+
   #pointPresenter = new Map();
   #currentSortType = SortType.DATE;
-  #sourceRoutePoints = [];
 
   constructor (containerElement,pointModel) {
     this.#containerElement = containerElement;
@@ -28,25 +26,18 @@ export default class RoutePresenter {
   }
 
   get points() {
+    switch (this.#currentSortType) {
+      case SortType.DATE:
+        return [...this.#pointModel.points].sort(sortPointDay);
+      case SortType.PRICE:
+        return [...this.#pointModel.points].sort(sortPointPrice);
+    }
     return this.#pointModel.points;
   }
 
-  get destinations () {
-    return this.#pointModel.destinations;
-  }
-
-  get offers () {
-    return this.#pointModel.offers;
-  }
-
   init = () => {
-    this.#points = [...this.#pointModel.points];
     this.#destinations = [...this.#pointModel.destinations];
     this.#offers = [...this.#pointModel.offers];
-    // render(new FormAdd (this.#routePoints[0],this.#destinations,this.#offers) , this.#formList.element);
-
-    this.#sourceRoutePoints = [...this.#pointModel.points];
-
     this.#renderTripPoints();
   };
 
@@ -55,25 +46,7 @@ export default class RoutePresenter {
   };
 
   #onPointChange = (updatedPointRoute,destinations,offers) => {
-    this.#points = updateItem(this.#points,updatedPointRoute);
-    this.#sourceRoutePoints = updateItem(this.#sourceRoutePoints,updatedPointRoute );
     this.#pointPresenter.get(updatedPointRoute.id).init(updatedPointRoute,destinations,offers);
-  };
-
-  #sortPoint = (sortType) => {
-
-    switch (sortType) {
-      case SortType.DAY:
-        this.#points.sort(sortPointDay);
-        break;
-      case SortType.PRICE:
-        this.#points.sort(sortPointPrice);
-        break;
-      default:
-        this.#points = [...this.#sourceRoutePoints];
-    }
-
-    this.#currentSortType = sortType;
   };
 
   #onSortTypeChange = (sortType) => {
@@ -81,7 +54,7 @@ export default class RoutePresenter {
     if (this.#currentSortType === sortType) {
       return;
     }
-    this.#sortPoint(sortType);
+    this.#currentSortType = sortType;
     this.#clearPointList();
     this.#renderTripPoints();
   };
@@ -111,15 +84,13 @@ export default class RoutePresenter {
   };
 
   #renderTripPoints = () => {
-    if (this.#points.length === 0) {
+    if (this.points.length === 0) {
       this.#renderNoPoint();
     } else {
       this.#renderSort();
       this.#rednerFormList();
-      for (let i = 0;i < this.#points.length; i++) {
-        this.#renderPoint(this.#points[i],this.#destinations,this.#offers);
-      }
     }
+    this.points.forEach((point) => this.#renderPoint(point, this.#destinations, this.#offers));
   };
 }
 
