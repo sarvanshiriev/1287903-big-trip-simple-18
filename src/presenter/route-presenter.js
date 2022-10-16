@@ -1,4 +1,4 @@
-import {render} from '../framework/render.js';
+import {remove,render} from '../framework/render.js';
 // import FormAdd from '../view/form-add-view';
 import PointPresenter from './point-presenter.js';
 import PointList from '../view/point-list';
@@ -55,6 +55,7 @@ export default class RoutePresenter {
         break;
     }
   };
+
   #onModelPoint = (updateType, data) => {
     switch (updateType) {
       case UpdateType.PATCH:
@@ -68,8 +69,8 @@ export default class RoutePresenter {
         this.#clearPointList({resetSortingType: true});
         this.#renderTripPoints();
         break;
-    };
-  }
+    }
+  };
 
   #onModeChange = () => {
     this.#pointPresenter.forEach((presenter) => presenter.resetView());
@@ -105,17 +106,6 @@ export default class RoutePresenter {
     render (this.#pointList , this.#containerElement);
   };
 
-  #clearPointList = ({resetSortType = false} = {}) => {
-    this.#pointPresenter.forEach((presenter) => presenter.destroy());
-    this.#pointPresenter.clear();
-    remove(this.#sortingComponent);
-    remove(this.#tripEventsListComponent);
-
-    if (resetSortType) {
-      this.#currentSortType = SortType.DAY;
-    }
-  };
-
   #renderTripPoints = () => {
     if (this.points.length === 0) {
       this.#renderNoPoint();
@@ -124,6 +114,18 @@ export default class RoutePresenter {
       this.#rednerFormList();
     }
     this.points.forEach((point) => this.#renderPoint(point, this.#destinations, this.#offers));
+  };
+
+  #clearPointList = ({resetSortType = false} = {}) => {
+    this.#pointPresenter.forEach((presenter) => presenter.destroy());
+    this.#pointPresenter.clear();
+
+    remove(this.#sort);
+    remove(this.#noPoint);
+
+    if (resetSortType) {
+      this.#currentSortType = SortType.DAY;
+    }
   };
 }
 

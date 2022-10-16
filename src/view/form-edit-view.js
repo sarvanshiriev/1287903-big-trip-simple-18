@@ -204,13 +204,6 @@ export default class FormEdit extends AbstractStatefulView {
     this._callback.formSubmit(FormEdit.parseStateToPoint(this._state),this.#destinations,this.#offers );
   };
 
-  _restoreHandlers = () => {
-    this.#setInnerHandlers();
-    this.setFormSubmit(this._callback.formSubmit);
-    this.setFormCLose(this._callback.formClose);
-    this.#setDatepicker();
-  };
-
   #setInnerHandlers = () => {
     this.element.addEventListener('change', this.#onOfferChange);
     this.element.addEventListener('change', this.#onEventTypeChange);
@@ -258,6 +251,24 @@ export default class FormEdit extends AbstractStatefulView {
     this.updateElement({
       destination: newDestination
     });
+  };
+
+  setFormDelete = (callback) => {
+    this._callback.formDelete = callback;
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#onDeletePointButtonClick);
+  };
+
+  #onDeletePointButtonClick = (evt) => {
+    evt.preventDefault();
+    this._callback.formDelete(FormEdit.parseStateToPoint(this._state));
+  };
+
+  _restoreHandlers = () => {
+    this.#setInnerHandlers();
+    this.setFormSubmit(this._callback.formSubmit);
+    this.setFormCLose(this._callback.formClose);
+    this.setFormDelete(this._callback.formDelete);
+    this.#setDatepicker();
   };
 
   static parsePointToState = (pointRoute) => ({...pointRoute});

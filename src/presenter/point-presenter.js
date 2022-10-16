@@ -1,7 +1,7 @@
 import { render,replace,remove } from '../framework/render.js';
 import PointRouteView from '../view/point-route-view';
 import FormEdit from '../view/form-edit-view';
-import {UserAction, UpdateType} from '../const.js';
+import {UserAction, UpdateType} from '../mock/const.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -42,7 +42,7 @@ export default class PointPresenter {
     this.#pointRouteView.setFormOpen(this.#setFormOpen);
     this.#formEdit.setFormCLose(this.#setFormCLose);
     this.#formEdit.setFormSubmit(this.#setFormSubmit);
-    this.#editPointComponent.setOnDeletePointButtonClick(this.#onDeleteButtonClick);
+    this.#formEdit.setFormDelete(this.#setFormDelete);
 
 
     if (prevPointRouteView === null || prevFormEdit === null) {
@@ -106,10 +106,10 @@ export default class PointPresenter {
 
   #setFormSubmit = (update, destinations, offersByType) => {
     this.#changeData(UserAction.UPDATE_POINT, UpdateType.MINOR, update, destinations, offersByType);
-    this.#replaceFormToCard();
+    this.#replaceFormToPoint();
   };
 
-  #setDeleteButtonClick = (point) => {
+  #setFormDelete = (point) => {
     this.#changeData(UserAction.DELETE_POINT, UpdateType.MINOR, point);
   };
 }

@@ -216,9 +216,9 @@ const SortType = {
 };
 
 const UserAction = {
-  UPDATE_EVENT: 'UPDATE_EVENT',
-  ADD_EVENT: 'ADD_EVENT',
-  DELETE_EVENT: 'DELETE_EVENT',
+  UPDATE_POINT: 'UPDATE_EVENT',
+  ADD_POINT: 'ADD_EVENT',
+  DELETE_POINT: 'DELETE_EVENT',
 };
 
 const UpdateType = {
