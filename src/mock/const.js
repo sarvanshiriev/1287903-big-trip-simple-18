@@ -227,4 +227,9 @@ const UpdateType = {
   MAJOR: 'MAJOR',
 };
 
-export {TRIP_TYPES,DESTINATIONS,OFFERS,SortType,UserAction, UpdateType};
+const FilterType = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future'
+};
+
+export {TRIP_TYPES,DESTINATIONS,OFFERS,SortType,UserAction, UpdateType,FilterType};
