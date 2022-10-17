@@ -1,4 +1,3 @@
-import {render} from './framework/render.js';
 import RoutePresenter from './presenter/route-presenter';
 import PointModel from './model/point-model';
 import FilterModel from './model/filter-model.js';

@@ -6,6 +6,7 @@ import NoPoint from '../view/no-point-view';
 import Sort from '../view/sort';
 import { SortType,UserAction, UpdateType } from '../mock/const.js';
 import {sortPointDay,sortPointPrice} from '../utils/point-utils';
+import { filter } from '../utils/filter-utils.js';
 export default class RoutePresenter {
   #pointList = new PointList ();
   #sort = null;
@@ -14,26 +15,35 @@ export default class RoutePresenter {
   #containerElement = null;
   #pointModel = null;
 
+  #filterModel = null;
+
   #destinations = null;
   #offers = null;
 
   #pointPresenter = new Map();
   #currentSortType = SortType.DATE;
 
-  constructor (containerElement,pointModel) {
+  constructor (containerElement,pointModel,filterModel) {
     this.#containerElement = containerElement;
     this.#pointModel = pointModel;
+    this.#filterModel = filterModel;
+
     this.#pointModel.addObserver(this.#onModelPoint);
+    this.#filterModel.addObserver(this.#onModelPoint);
   }
 
   get points() {
+    const filterType = this.#filterModel.filter;
+    const points = this.#pointModel.points;
+    const filteredPoints = filter[filterType](points);
+
     switch (this.#currentSortType) {
       case SortType.DATE:
-        return [...this.#pointModel.points].sort(sortPointDay);
+        return filteredPoints.sort(sortPointDay);
       case SortType.PRICE:
-        return [...this.#pointModel.points].sort(sortPointPrice);
+        return filteredPoints.sort(sortPointPrice);
     }
-    return this.#pointModel.points;
+    return filteredPoints;
   }
 
   init = () => {
@@ -122,7 +132,7 @@ export default class RoutePresenter {
 
     remove(this.#sort);
     remove(this.#noPoint);
-
+    remove(this.#pointList);
     if (resetSortType) {
       this.#currentSortType = SortType.DAY;
     }
