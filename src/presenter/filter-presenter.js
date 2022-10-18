@@ -1,6 +1,6 @@
 import {render, replace, remove} from '../framework/render.js';
-import Filter from '../view/filter.js';
-import {FilterType, UpdateType} from '../mock/const.js';
+import FilterView from '../view/filter-view.js';
+import {FilterType, UpdateType} from '../mock/const-mock.js';
 
 export default class FilterPresenter {
   #filterContainer = null;
@@ -14,8 +14,8 @@ export default class FilterPresenter {
     this.#filterModel = filterModel;
     this.#tripEventsModel = tripEventsModel;
 
-    this.#tripEventsModel.addObserver(this.#onModelEvent);
-    this.#filterModel.addObserver(this.#onModelEvent);
+    this.#tripEventsModel.addObserver(this.#onModelPoint);
+    this.#filterModel.addObserver(this.#onModelPoint);
   }
 
   get filters() {
@@ -35,7 +35,7 @@ export default class FilterPresenter {
     const filters = this.filters;
     const prevFilterComponent = this.#filterComponent;
 
-    this.#filterComponent = new Filter(filters, this.#filterModel.filter);
+    this.#filterComponent = new FilterView(filters, this.#filterModel.filter);
     this.#filterComponent.setOnFilterTypeChange(this.#onFilterTypeChange);
 
     if (prevFilterComponent === null) {
@@ -47,7 +47,7 @@ export default class FilterPresenter {
     remove(prevFilterComponent);
   };
 
-  #onModelEvent = () => {
+  #onModelPoint = () => {
     this.init();
   };
 

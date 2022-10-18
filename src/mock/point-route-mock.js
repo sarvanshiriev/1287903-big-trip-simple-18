@@ -1,6 +1,7 @@
-import { getRandomArrayElement,getRandomInteger,getRandomElementsFromArray } from '../utils/common-utils';
-import {TRIP_TYPES,DESTINATIONS,OFFERS} from './const';
+import { getRandomArrayElement,getRandomInteger,getRandomElementsFromArray } from '../utils/common-utils.js';
+import {TRIP_TYPES,DESTINATIONS,OFFERS} from './const-mock.js';
 import {nanoid} from 'nanoid';
+
 const getArrayId = (type) => {
   const offersByType = OFFERS.find((element) => element.type === type ).offers;
   return offersByType.map((element) => element.id);

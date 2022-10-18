@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { FilterType } from '../mock/const.js';
+import { FilterType } from '../mock/const-mock.js';
 
 const EmptyListMessageTextType = {
   [FilterType.EVERYTHING]: 'Click New Event to create your first point',
@@ -10,7 +10,7 @@ const createEmptyListMessageTemplate = (filterType) => {
   const EmptyListMessageTextValue = EmptyListMessageTextType[filterType];
   return (`<p class="trip-events__msg">${EmptyListMessageTextValue}</p>`);
 };
-export default class NoPoint extends AbstractView {
+export default class NoPointView extends AbstractView {
   #filterType = null;
 
   constructor(filterType) {

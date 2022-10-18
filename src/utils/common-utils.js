@@ -1,4 +1,3 @@
-
 // Функция, возвращающая случайное целое число из переданного диапазона
 const getRandomInteger = function (a = 0, b = 1) {
   const lower = Math.ceil(Math.min(a, b));

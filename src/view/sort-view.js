@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { SortType } from '../mock/const.js';
+import { SortType } from '../mock/const-mock.js';
 
 const createSortTemplate = (currentSortType) => `
 <form class="trip-events__trip-sort  trip-sort" action="#" method="get">
@@ -30,7 +30,7 @@ const createSortTemplate = (currentSortType) => `
 </form>
 `;
 
-export default class Sort extends AbstractView {
+export default class SortView extends AbstractView {
   #currentSortType = null;
 
   constructor(currentSortType) {

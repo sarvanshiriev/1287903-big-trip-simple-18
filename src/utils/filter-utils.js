@@ -1,4 +1,4 @@
-import { FilterType } from '../mock/const';
+import { FilterType } from '../mock/const-mock';
 import { isEventFuture } from './point-utils.js';
 
 const filter = {

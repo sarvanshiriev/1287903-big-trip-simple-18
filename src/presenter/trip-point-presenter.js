@@ -1,33 +1,39 @@
 import {remove,render} from '../framework/render.js';
 // import FormAdd from '../view/form-add-view';
 import PointPresenter from './point-presenter.js';
-import PointList from '../view/point-list';
-import NoPoint from '../view/no-point-view';
-import Sort from '../view/sort';
-import { SortType,UserAction, UpdateType,FilterType } from '../mock/const.js';
+import PointListView from '../view/point-list-view';
+import NoPointView from '../view/no-point-view';
+import SortView from '../view/sort-view';
+import AddPointPresenter from './add-point-presenter.js';
+import { SortType,UserAction, UpdateType,FilterType } from '../mock/const-mock.js';
 import {sortPointDay,sortPointPrice} from '../utils/point-utils';
 import { filter } from '../utils/filter-utils.js';
-export default class RoutePresenter {
-  #pointList = new PointList ();
-  #sort = null;
+export default class TripPointPresenter {
   #noPoint = null;
+  #sort = null;
+  #pointList = new PointListView ();
 
   #containerElement = null;
+
   #pointModel = null;
-
   #filterModel = null;
-
-  #destinations = null;
-  #offers = null;
+  #destinationsModel = null;
+  #offersModel = null;
 
   #pointPresenter = new Map();
+  #addPointPresenter = null;
+
   #currentSortType = SortType.DATE;
   #filterType = FilterType.EVERYTHING;
 
-  constructor (containerElement,pointModel,filterModel) {
+  constructor (containerElement,pointModel,destinationsModel, offerModel,filterModel) {
     this.#containerElement = containerElement;
     this.#pointModel = pointModel;
+    this.#destinationsModel = destinationsModel;
+    this.#offersModel = offerModel;
     this.#filterModel = filterModel;
+
+    this.#addPointPresenter = new AddPointPresenter (this.#pointList.element, this.#onViewAction);
 
     this.#pointModel.addObserver(this.#onModelPoint);
     this.#filterModel.addObserver(this.#onModelPoint);
@@ -48,9 +54,12 @@ export default class RoutePresenter {
   }
 
   init = () => {
-    this.#destinations = [...this.#pointModel.destinations];
-    this.#offers = [...this.#pointModel.offers];
     this.#renderTripPoints();
+  };
+
+  createTripPoint = (callback) => {
+    this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this.#addPointPresenter.init(this.#destinationsModel.destinations, this.#offersModel.offers, callback);
   };
 
   #onViewAction = (actionType, updateType, update) => {
@@ -70,7 +79,7 @@ export default class RoutePresenter {
   #onModelPoint = (updateType, data) => {
     switch (updateType) {
       case UpdateType.PATCH:
-        this.#pointPresenter.get(data.id).init(data);
+        this.#pointPresenter.get(data.id).init(data,this.#destinationsModel.destinations, this.#offersModel.offers);
         break;
       case UpdateType.MINOR:
         this.#clearPointList();
@@ -84,32 +93,29 @@ export default class RoutePresenter {
   };
 
   #onModeChange = () => {
+    this.#addPointPresenter.destroy();
     this.#pointPresenter.forEach((presenter) => presenter.resetView());
   };
 
   #onSortTypeChange = (sortType) => {
-
-    if (this.#currentSortType === sortType) {
-      return;
-    }
     this.#currentSortType = sortType;
     this.#clearPointList();
     this.#renderTripPoints();
   };
 
-  #renderPoint = (pointRoute,destinations,offers) => {
+  #renderPoint = (pointRoute) => {
     const pointPresenter = new PointPresenter(this.#pointList.element,this.#onViewAction,this.#onModeChange);
-    pointPresenter.init(pointRoute,destinations,offers);
+    pointPresenter.init(pointRoute,this.#destinationsModel.destinations,this.#offersModel.offers);
     this.#pointPresenter.set(pointRoute.id,pointPresenter);
   };
 
   #renderNoPoint = () => {
-    this.#noPoint = new NoPoint(this.#filterType);
+    this.#noPoint = new NoPointView (this.#filterType);
     render (this.#noPoint, this.#containerElement);
   };
 
   #renderSort = () => {
-    this.#sort = new Sort(this.#currentSortType);
+    this.#sort = new SortView (this.#currentSortType);
     this.#sort.setSortTypeChangeHandler(this.#onSortTypeChange);
     render (this.#sort, this.#containerElement);
   };
@@ -125,15 +131,15 @@ export default class RoutePresenter {
       this.#renderSort();
       this.#rednerFormList();
     }
-    this.points.forEach((point) => this.#renderPoint(point, this.#destinations, this.#offers));
+    this.points.forEach((point) => this.#renderPoint(point, this.#destinationsModel.destinations, this.#offersModel.offers));
   };
 
   #clearPointList = ({resetSortType = false} = {}) => {
+    this.#addPointPresenter.destroy();
     this.#pointPresenter.forEach((presenter) => presenter.destroy());
     this.#pointPresenter.clear();
 
     remove(this.#sort);
-    remove(this.#pointList);
 
     if (this.#noPoint) {
       remove(this.#noPoint);

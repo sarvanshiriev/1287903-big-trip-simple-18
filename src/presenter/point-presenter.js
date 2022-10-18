@@ -1,7 +1,7 @@
 import { render,replace,remove } from '../framework/render.js';
 import PointRouteView from '../view/point-route-view';
-import FormEdit from '../view/form-edit-view';
-import {UserAction, UpdateType} from '../mock/const.js';
+import FormEditView from '../view/form-edit-view';
+import {UserAction, UpdateType} from '../mock/const-mock.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -37,7 +37,7 @@ export default class PointPresenter {
     const prevFormEdit = this.#formEdit;
 
     this.#pointRouteView = new PointRouteView(pointRoute,destinations,offers);
-    this.#formEdit = new FormEdit(pointRoute,destinations,offers);
+    this.#formEdit = new FormEditView(pointRoute,destinations,offers);
 
     this.#pointRouteView.setFormOpen(this.#setFormOpen);
     this.#formEdit.setFormCLose(this.#setFormCLose);

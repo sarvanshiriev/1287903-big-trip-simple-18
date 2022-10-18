@@ -1,5 +1,5 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import { humanizePointDate } from '../utils/point-utils.js';
+import { humanizePointDate} from '../utils/point-utils.js';
 import flatpickr from 'flatpickr';
 
 import 'flatpickr/dist/flatpickr.min.css';
@@ -114,7 +114,7 @@ const createFormEditTemplate = (pointRoute,destinations,offers) => {
   );
 };
 
-export default class FormEdit extends AbstractStatefulView {
+export default class FormEditView extends AbstractStatefulView {
   #pointRoute = null;
   #destinations = null;
   #offers = null;
@@ -123,7 +123,7 @@ export default class FormEdit extends AbstractStatefulView {
 
   constructor (pointRoute,destinations,offers) {
     super();
-    this._state = FormEdit.parsePointToState(pointRoute);
+    this._state = FormEditView.parsePointToState(pointRoute);
     this.#destinations = destinations;
     this.#offers = offers;
     this.#setInnerHandlers();
@@ -149,7 +149,7 @@ export default class FormEdit extends AbstractStatefulView {
 
   reset = (pointRoute) => {
     this.updateElement (
-      FormEdit.parsePointToState(pointRoute)
+      FormEditView.parsePointToState(pointRoute)
     );
   };
 
@@ -201,7 +201,7 @@ export default class FormEdit extends AbstractStatefulView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this._callback.formSubmit(FormEdit.parseStateToPoint(this._state),this.#destinations,this.#offers );
+    this._callback.formSubmit(FormEditView.parseStateToPoint(this._state),this.#destinations,this.#offers );
   };
 
   #setInnerHandlers = () => {
@@ -260,7 +260,7 @@ export default class FormEdit extends AbstractStatefulView {
 
   #onDeletePointButtonClick = (evt) => {
     evt.preventDefault();
-    this._callback.formDelete(FormEdit.parseStateToPoint(this._state));
+    this._callback.formDelete(FormEditView.parseStateToPoint(this._state));
   };
 
   _restoreHandlers = () => {
