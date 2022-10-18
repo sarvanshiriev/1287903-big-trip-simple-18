@@ -1,6 +1,5 @@
 import { render } from './framework/render.js';
-import { generatePointRoute} from './mock/point-route-mock.js';
-import {DESTINATIONS,OFFERS} from './mock/const-mock.js';
+import { generatePoint, destinations, offersByType} from './mock/point-route-mock.js';
 
 import DestinationsModel from './model/destinations-model.js';
 import OffersByTypeModel from './model/offers-by-type-model.js';
@@ -18,9 +17,9 @@ const formAddButtonContainer = document.querySelector('.trip-main');
 const containerFilterPlace = document.querySelector('.trip-controls__filters');
 const containerPlace = document.querySelector('.trip-events');
 
-const pointModel = new PointModel(Array.from({ length: 10 }, generatePointRoute));
-const destinationsModel = new DestinationsModel(DESTINATIONS);
-const offersByTypeModel = new OffersByTypeModel(OFFERS);
+const pointModel = new PointModel(Array.from({ length: 10 }, generatePoint));
+const destinationsModel = new DestinationsModel(destinations);
+const offersByTypeModel = new OffersByTypeModel(offersByType);
 const filterModel = new FilterModel();
 
 

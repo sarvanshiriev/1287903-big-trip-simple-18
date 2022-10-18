@@ -136,7 +136,7 @@ const createFormEditTemplate = (event, destinations, offersByType) => {
   );
 };
 
-export default class FormAddView extends AbstractStatefulView {
+export default class PointAddView extends AbstractStatefulView {
   #dateFromPicker = null;
   #dateToPicker = null;
 
@@ -164,7 +164,7 @@ export default class FormAddView extends AbstractStatefulView {
 
   #onSubmitPointForm = (evt) => {
     evt.preventDefault();
-    this._callback.submitPointForm(FormAddView.parseStateToPoint(this._state), this.#destinations, this.#offersByType);
+    this._callback.submitPointForm(PointAddView.parseStateToPoint(this._state), this.#destinations, this.#offersByType);
   };
 
   setOnCancelPointButtonClick = (callback) => {

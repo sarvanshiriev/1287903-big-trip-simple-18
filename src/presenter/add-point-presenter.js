@@ -1,6 +1,6 @@
 import { render, remove, RenderPosition } from '../framework/render.js';
 import { UserAction, UpdateType } from '../mock/const-mock.js';
-import FormAddView from '../view/form-add-view.js';
+import FormAddView from '../view/point-add-view.js';
 
 import { customAlphabet } from 'nanoid';
 const nanoid = customAlphabet('1234567890', 10);

@@ -1,25 +1,7 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { humanizePointDate} from '../utils/point-utils.js';
 import flatpickr from 'flatpickr';
-
 import 'flatpickr/dist/flatpickr.min.css';
-const createTypeTemplate = (offers,type) => {
-  const eventByType = offers.map((element) => element.type );
-
-  return eventByType.map((eventType) =>
-    `<div class="event__type-item">
-    <input id="event-type-${eventType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${eventType}" ${eventType === type ? 'checked' : ''}>
-    <label class="event__type-label  event__type-label--${eventType}" for="event-type-${eventType}-1">${eventType}</label>
-  </div>`
-  ).join('');
-};
-
-const createNameTemplate = (destinations) => {
-  const nameByType = destinations.map((element) => element.name );
-  return nameByType.map((name) =>
-    `<option value="${name}"></option>
-`).join('');
-};
 
 const createOffersTemplate = (offers,offersAll,type) => {
   const offersByType = offers.find((element) => element.type === type).offers;
@@ -45,6 +27,25 @@ const createOffersTemplate = (offers,offersAll,type) => {
   );
   return offerTemplate.join('');
 };
+
+const createNameTemplate = (destinations) => {
+  const nameByType = destinations.map((element) => element.name );
+  return nameByType.map((name) =>
+    `<option value="${name}"></option>
+`).join('');
+};
+
+const createTypeTemplate = (offers,type) => {
+  const pointByType = offers.map((element) => element.type );
+
+  return pointByType.map((pointType) =>
+    `<div class="event__type-item">
+    <input id="event-type-${pointType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${pointType}" ${pointType === type ? 'checked' : ''}>
+    <label class="event__type-label  event__type-label--${pointType}" for="event-type-${pointType}-1">${pointType}</label>
+  </div>`
+  ).join('');
+};
+
 const createFormEditTemplate = (pointRoute,destinations,offers) => {
   const {basePrice,dateFrom,dateTo,destination,type,offersAll} = pointRoute;
 
@@ -114,7 +115,7 @@ const createFormEditTemplate = (pointRoute,destinations,offers) => {
   );
 };
 
-export default class FormEditView extends AbstractStatefulView {
+export default class PointEditView extends AbstractStatefulView {
   #pointRoute = null;
   #destinations = null;
   #offers = null;
@@ -123,7 +124,7 @@ export default class FormEditView extends AbstractStatefulView {
 
   constructor (pointRoute,destinations,offers) {
     super();
-    this._state = FormEditView.parsePointToState(pointRoute);
+    this._state = PointEditView.parsePointToState(pointRoute);
     this.#destinations = destinations;
     this.#offers = offers;
     this.#setInnerHandlers();
@@ -149,7 +150,7 @@ export default class FormEditView extends AbstractStatefulView {
 
   reset = (pointRoute) => {
     this.updateElement (
-      FormEditView.parsePointToState(pointRoute)
+      PointEditView.parsePointToState(pointRoute)
     );
   };
 
@@ -201,7 +202,7 @@ export default class FormEditView extends AbstractStatefulView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this._callback.formSubmit(FormEditView.parseStateToPoint(this._state),this.#destinations,this.#offers );
+    this._callback.formSubmit(PointEditView.parseStateToPoint(this._state),this.#destinations,this.#offers );
   };
 
   #setInnerHandlers = () => {
@@ -260,7 +261,7 @@ export default class FormEditView extends AbstractStatefulView {
 
   #onDeletePointButtonClick = (evt) => {
     evt.preventDefault();
-    this._callback.formDelete(FormEditView.parseStateToPoint(this._state));
+    this._callback.formDelete(PointEditView.parseStateToPoint(this._state));
   };
 
   _restoreHandlers = () => {

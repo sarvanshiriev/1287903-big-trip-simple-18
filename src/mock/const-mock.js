@@ -60,7 +60,7 @@ const DESTINATIONS = [
     ]
   }
 ];
-const OFFERS = [
+const OFFERS_BY_TYPE = [
   {type: 'taxi',
     offers: [
       {
@@ -232,4 +232,8 @@ const FilterType = {
   FUTURE: 'future'
 };
 
-export {TRIP_TYPES,DESTINATIONS,OFFERS,SortType,UserAction, UpdateType,FilterType};
+const getOffersByType = () => OFFERS_BY_TYPE;
+const getDestinations = () => DESTINATIONS;
+
+
+export {TRIP_TYPES,getOffersByType,getDestinations,SortType,UserAction, UpdateType,FilterType};
