@@ -7,11 +7,11 @@ import PointModel from './model/point-model';
 import FilterModel from './model/filter-model.js';
 
 import FilterPresenter from './presenter/filter-presenter.js';
-import RoutePresenter from './presenter/trip-point-presenter.js';
+import TripPointPresenter from './presenter/trip-point-presenter.js';
 
 import FormAddButtonView from './view/form-add-button-view';
 
-const formAddButton = new FormAddButtonView();
+const formAddButtonComponent = new FormAddButtonView();
 const formAddButtonContainer = document.querySelector('.trip-main');
 
 const containerFilterPlace = document.querySelector('.trip-controls__filters');
@@ -23,21 +23,21 @@ const offersByTypeModel = new OffersByTypeModel(offersByType);
 const filterModel = new FilterModel();
 
 
-const routePresenter = new RoutePresenter(containerPlace, pointModel,destinationsModel, offersByTypeModel, filterModel);
+const tripPointPresenter = new TripPointPresenter(containerPlace, pointModel,destinationsModel, offersByTypeModel, filterModel);
 const filterPresenter = new FilterPresenter(containerFilterPlace, filterModel, pointModel);
 
-const onAddEventFormClose = () => {
-  formAddButton.element.disabled = false;
+const onAddPointFormClose = () => {
+  formAddButtonComponent.element.disabled = false;
 };
 
-const onAddEventButtonClick = () => {
-  routePresenter.createTripEvent(onAddEventFormClose);
-  formAddButton.element.disabled = true;
+const onAddPointButtonClick = () => {
+  tripPointPresenter.createTripPoint(onAddPointFormClose);
+  formAddButtonComponent.element.disabled = true;
 };
 
-render(formAddButton, formAddButtonContainer);
-formAddButton.setOnAddEventButtonClick(onAddEventButtonClick);
+render(formAddButtonComponent, formAddButtonContainer);
+formAddButtonComponent.setOnAddPointButtonClick(onAddPointButtonClick);
 
 filterPresenter.init();
-routePresenter.init();
+tripPointPresenter.init();
 

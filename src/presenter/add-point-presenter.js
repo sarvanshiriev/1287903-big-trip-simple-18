@@ -1,6 +1,6 @@
 import { render, remove, RenderPosition } from '../framework/render.js';
 import { UserAction, UpdateType } from '../mock/const-mock.js';
-import FormAddView from '../view/point-add-view.js';
+import PointAddView from '../view/point-add-view.js';
 
 import { customAlphabet } from 'nanoid';
 const nanoid = customAlphabet('1234567890', 10);
@@ -29,14 +29,15 @@ export default class AddPointPresenter {
       return;
     }
 
-    this.#addPointComponent = new FormAddView (destinations, offersByType);
+    this.#addPointComponent = new PointAddView (undefined, destinations, offersByType);
 
     this.#addPointComponent.setOnCancelPointButtonClick(this.#onCancelButtonClick);
+    this.#addPointComponent.setOnClosePointButtonClick(this.#onCloseButtonClick);
     this.#addPointComponent.setOnSubmitPointForm(this.#onFormSubmit);
 
     render(this.#addPointComponent, this.#tripPointsListContainer, RenderPosition.AFTERBEGIN);
 
-    document.addPointListener('keydown', this.#onEscKeyDown);
+    document.addEventListener('keydown', this.#onEscKeyDown);
   };
 
   destroy = () => {
@@ -52,6 +53,24 @@ export default class AddPointPresenter {
     document.removePointListener('keydown', this.#onEscKeyDown);
   };
 
+  setSaving = () => {
+    this.#addPointComponent.updateElement({
+      isDisabled: true,
+      isSaving: true,
+    });
+  };
+
+  setAborting = () => {
+    const resetFormState = () => {
+      this.#addPointComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+      });
+    };
+
+    this.#addPointComponent.shake(resetFormState);
+  };
+
   #onEscKeyDown = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
@@ -60,6 +79,10 @@ export default class AddPointPresenter {
   };
 
   #onCancelButtonClick = () => {
+    this.destroy();
+  };
+
+  #onCloseButtonClick = () => {
     this.destroy();
   };
 

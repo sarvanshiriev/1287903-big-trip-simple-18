@@ -3,9 +3,9 @@ import Observable from '../framework/observable.js';
 export default class OffersByTypeModel extends Observable {
   #offersByType = null;
 
-  constructor (OFFERS) {
+  constructor (offersByType) {
     super();
-    this.#offersByType = OFFERS;
+    this.#offersByType = offersByType;
   }
 
   get offersByType() {

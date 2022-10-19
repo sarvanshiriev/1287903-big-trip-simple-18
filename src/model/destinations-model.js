@@ -3,9 +3,9 @@ import Observable from '../framework/observable.js';
 export default class DestinationsModel extends Observable {
   #destinations = null;
 
-  constructor (DESTINATIONS) {
+  constructor (destinations) {
     super();
-    this.#destinations = DESTINATIONS;
+    this.#destinations = destinations;
   }
 
   get destinations() {
