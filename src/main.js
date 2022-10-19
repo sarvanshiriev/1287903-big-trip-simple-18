@@ -9,7 +9,7 @@ import FilterModel from './model/filter-model.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import TripPointPresenter from './presenter/trip-point-presenter.js';
 
-import FormAddButtonView from './view/form-add-button-view';
+import FormAddButtonView from './view/add-form-button-view.js';
 
 const formAddButtonComponent = new FormAddButtonView();
 const formAddButtonContainer = document.querySelector('.trip-main');

@@ -1,6 +1,6 @@
 import { render, remove, RenderPosition } from '../framework/render.js';
 import { UserAction, UpdateType } from '../mock/const-mock.js';
-import PointAddView from '../view/point-add-view.js';
+import PointAddView from '../view/add-point-view.js';
 
 import { customAlphabet } from 'nanoid';
 const nanoid = customAlphabet('1234567890', 10);
@@ -50,7 +50,7 @@ export default class AddPointPresenter {
     remove(this.#addPointComponent);
     this.#addPointComponent = null;
 
-    document.removePointListener('keydown', this.#onEscKeyDown);
+    document.removeEventListener('keydown', this.#onEscKeyDown);
   };
 
   setSaving = () => {

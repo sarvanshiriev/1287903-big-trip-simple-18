@@ -1,6 +1,6 @@
 import { render,replace,remove } from '../framework/render.js';
-import PointRouteView from '../view/point-route-view';
-import FormEditView from '../view/point-edit-view';
+import PointRouteView from '../view/point-route-view.js';
+import FormEditView from '../view/edit-point-view.js';
 import {UserAction, UpdateType} from '../mock/const-mock.js';
 
 const Mode = {

@@ -81,7 +81,7 @@ const createFormEditTemplate = (pointRoute,destinations,offersByType) => {
           <span class="visually-hidden">Price</span>
           &euro;
         </label>
-        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
+        <input class="event__input  event__input--price" id="event-price-1" type="number" min="1" max="9999999"  name="event-price" value="${basePrice}">
       </div>
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
       <button class="event__reset-btn" type="reset">Delete</button>
@@ -198,6 +198,7 @@ export default class PointEditView extends AbstractStatefulView {
     this.element.addEventListener('change', this.#onOfferChange);
     this.element.addEventListener('change', this.#onEventTypeChange);
     this.element.addEventListener('change', this.#onDestinationChange);
+    this.element.addEventListener('change', this.#onPriceChange);
   };
 
   #onOfferChange = (evt) => {
@@ -206,7 +207,7 @@ export default class PointEditView extends AbstractStatefulView {
     }
 
     evt.preventDefault();
-    const checkedOffers = [...this._state.offersAll];
+    const checkedOffers = [...this._state.offers];
     if (evt.target.checked) {
       checkedOffers.push(Number(evt.target.dataset.offerId));
     } else {
@@ -215,7 +216,7 @@ export default class PointEditView extends AbstractStatefulView {
     }
 
     this.updateElement({
-      offersAll: checkedOffers
+      offers: checkedOffers
     });
   };
 
@@ -227,7 +228,7 @@ export default class PointEditView extends AbstractStatefulView {
     evt.preventDefault();
     this.updateElement({
       type: evt.target.value,
-      offersAll: []
+      offers: []
     });
   };
 
@@ -246,6 +247,17 @@ export default class PointEditView extends AbstractStatefulView {
   setFormDelete = (callback) => {
     this._callback.formDelete = callback;
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#onDeletePointButtonClick);
+  };
+
+  #onPriceChange = (evt) => {
+    if (!evt.target.closest('input[type="number"].event__input--price')) {
+      return;
+    }
+
+    evt.preventDefault();
+    this.updateElement({
+      basePrice: evt.target.value
+    });
   };
 
   #onDeletePointButtonClick = (evt) => {
