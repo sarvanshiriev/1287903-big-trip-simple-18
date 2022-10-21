@@ -2,6 +2,7 @@ import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { humanizePointDate, isOfferChecked } from '../utils/point-utils.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
+import he from 'he';
 
 const createOffersTemplate = (offers,offersByType,type) => {
   const offersByCurrentType = offersByType.find((element) => element.type === type).offers;
@@ -64,7 +65,7 @@ const createFormEditTemplate = (pointRoute,destinations,offersByType) => {
         <label class="event__label  event__type-output" for="event-destination-1">
         ${type}
         </label>
-        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destinationName}" list="destination-list-1">
+        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(destinationName)}" list="destination-list-1">
         <datalist id="destination-list-1">
         ${createNameTemplate(destinations)}
         </datalist>
