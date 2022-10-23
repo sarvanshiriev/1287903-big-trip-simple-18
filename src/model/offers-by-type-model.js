@@ -1,5 +1,5 @@
 import Observable from '../framework/observable.js';
-import { UpdateType } from '../mock/const-mock.js';
+import { UpdateType } from '../const.js';
 
 export default class OffersByTypeModel extends Observable {
   #tripPointsApiService = null;

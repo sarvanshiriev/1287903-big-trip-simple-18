@@ -1,5 +1,5 @@
 import { render, remove, RenderPosition } from '../framework/render.js';
-import { UserAction, UpdateType } from '../mock/const-mock.js';
+import { UserAction, UpdateType } from '../const.js';
 import PointAddView from '../view/add-point-view.js';
 
 import { customAlphabet } from 'nanoid';

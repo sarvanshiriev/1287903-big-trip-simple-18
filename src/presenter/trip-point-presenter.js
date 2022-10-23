@@ -4,7 +4,7 @@ import PointListView from '../view/point-list-view';
 import NoPointView from '../view/no-point-view';
 import SortView from '../view/sort-view';
 import AddPointPresenter from './add-point-presenter.js';
-import { SortType,UserAction, UpdateType,FilterType } from '../mock/const-mock.js';
+import { SortType,UserAction, UpdateType,FilterType } from '../const.js';
 import {sortPointDay,sortPointPrice} from '../utils/point-utils';
 import { filter } from '../utils/filter-utils.js';
 export default class TripPointPresenter {
