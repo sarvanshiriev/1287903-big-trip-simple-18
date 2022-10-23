@@ -46,3 +46,8 @@ formAddButtonComponent.setOnAddPointButtonClick(onAddPointButtonClick);
 filterPresenter.init();
 tripPointPresenter.init();
 
+Promise.all([destinationsModel.init(), offersByTypeModel.init(), pointModel.init()])
+  .then(() => {
+    render(formAddButtonComponent, formAddButtonContainer);
+    formAddButtonComponent.setOnAddEventButtonClick(onAddPointButtonClick);
+  });
