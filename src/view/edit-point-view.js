@@ -32,11 +32,10 @@ const createTypeTemplate = (offersByType,type,isDisabled) => {
   ).join('');
 };
 
-const createFormEditTemplate = (pointRoute,destinations,offersByType) => {
-  const {basePrice,dateFrom,dateTo,destination,type,offers,isDisabled, isSaving} = pointRoute;
+const createFormEditTemplate = (point,destinations,offersByType) => {
+  const {basePrice,dateFrom,dateTo,destination,type,offers,isDisabled, isSaving} = point;
 
-  const destinationName = destinations.find((element) => element.id === destination).name;
-  const destinationDescription = destinations.find((element) => element.id === destination).description;
+  const currentDestination = destinations.find((element) => element.id === destination);
 
   const dataFromDisplay = humanizePointDate(dateFrom, 'DD/MM/YY HH:mm');
   const dataToDisplay = humanizePointDate(dateTo, 'DD/MM/YY HH:mm');
@@ -61,7 +60,7 @@ const createFormEditTemplate = (pointRoute,destinations,offersByType) => {
         <label class="event__label  event__type-output" for="event-destination-1">
         ${type}
         </label>
-        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(destinationName)}" list="destination-list-1">
+        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(currentDestination.name)}" list="destination-list-1">
         <datalist id="destination-list-1">
         ${createNameTemplate(destinations, isDisabled)}
         </datalist>
@@ -93,7 +92,12 @@ const createFormEditTemplate = (pointRoute,destinations,offersByType) => {
       </section>
       <section class="event__section  event__section--destination">
         <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-        <p class="event__destination-description">${destinationDescription}</p>
+        <p class="event__destination-description">${currentDestination.description}</p>
+        <div class="event__photos-container">
+          <div class="event__photos-tape">
+            ${currentDestination.pictures}
+          </div>
+        </div>
       </section>
     </section>
   </form>
@@ -102,23 +106,23 @@ const createFormEditTemplate = (pointRoute,destinations,offersByType) => {
 };
 
 export default class PointEditView extends AbstractStatefulView {
-  #pointRoute = null;
-  #destinations = null;
-  #offers = null;
   #dateFromPicker = null;
   #dateToPicker = null;
 
-  constructor (pointRoute,destinations,offers) {
+  #destinations = null;
+  #offersByType = null;
+
+  constructor (point,destinations,offersByType) {
     super();
-    this._state = PointEditView.parsePointToState(pointRoute);
+    this._state = PointEditView.parsePointToState(point);
     this.#destinations = destinations;
-    this.#offers = offers;
+    this.#offersByType = offersByType;
     this.#setInnerHandlers();
     this.#setDatepicker();
   }
 
   get template() {
-    return createFormEditTemplate(this._state,this.#destinations,this.#offers);
+    return createFormEditTemplate(this._state,this.#destinations,this.#offersByType);
   }
 
   removeElement = () => {
@@ -134,9 +138,9 @@ export default class PointEditView extends AbstractStatefulView {
     }
   };
 
-  reset = (pointRoute) => {
+  reset = (point) => {
     this.updateElement (
-      PointEditView.parsePointToState(pointRoute)
+      PointEditView.parsePointToState(point)
     );
   };
 
@@ -188,7 +192,7 @@ export default class PointEditView extends AbstractStatefulView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this._callback.formSubmit(PointEditView.parseStateToPoint(this._state),this.#destinations,this.#offers );
+    this._callback.formSubmit(PointEditView.parseStateToPoint(this._state),this.#destinations,this.#offersByType );
   };
 
   #setInnerHandlers = () => {
