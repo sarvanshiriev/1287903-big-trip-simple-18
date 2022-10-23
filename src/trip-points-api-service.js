@@ -23,11 +23,11 @@ export default class TripPointsApiService extends ApiService {
       .then(ApiService.parseResponse);
   }
 
-  updatePoint = async ([point]) => {
+  updatePoint = async (point) => {
     const response = await this._load({
       url: `points/${[point].id}`,
       method: Method.PUT,
-      body: JSON.stringify(this.#adaptToServer([point])),
+      body: JSON.stringify(point),
       headers: new Headers({'Content-Type': 'application/json'})
     });
 
@@ -40,7 +40,7 @@ export default class TripPointsApiService extends ApiService {
     const response = await this._load({
       url: 'points',
       method: Method.POST,
-      body: JSON.stringify(this.#adaptToServer(point)),
+      body: JSON.stringify(point),
       headers: new Headers({'Content-Type': 'application/json'}),
     });
 
@@ -58,17 +58,4 @@ export default class TripPointsApiService extends ApiService {
     return response;
   };
 
-  #adaptToServer = (point) => {
-    const adaptedPoint = {...point,
-      'base_price': Number(point.basePrice),
-      'date_from': point.dateFrom instanceof Date ? point.dateFrom.toISOString() : null,
-      'date_to': point.dateTo instanceof Date ? point.dateTo.toISOString() : null
-    };
-
-    delete adaptedPoint.basePrice;
-    delete adaptedPoint.dateFrom;
-    delete adaptedPoint.dateTo;
-
-    return adaptedPoint;
-  };
 }
