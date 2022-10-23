@@ -1,4 +1,4 @@
-import {remove,render} from '../framework/render.js';
+import {remove,render, RenderPosition} from '../framework/render.js';
 import PointPresenter from './point-presenter.js';
 import PointListView from '../view/point-list-view';
 import NoPointView from '../view/no-point-view';
@@ -7,11 +7,12 @@ import AddPointPresenter from './add-point-presenter.js';
 import { SortType,UserAction, UpdateType,FilterType } from '../const.js';
 import {sortPointDay,sortPointPrice} from '../utils/point-utils';
 import { filter } from '../utils/filter-utils.js';
+import LoadingMessageView from '../view/loading-message-view.js';
 export default class TripPointPresenter {
   #noPoint = null;
   #sort = null;
   #pointList = new PointListView ();
-
+  #loadingMessageComponent = new LoadingMessageView();
   #containerElement = null;
 
   #pointModel = null;
@@ -24,6 +25,7 @@ export default class TripPointPresenter {
 
   #currentSortType = SortType.DATE;
   #filterType = FilterType.EVERYTHING;
+  #isLoading = true;
 
   constructor (containerElement,pointModel,destinationsModel, offersByTypeModel,filterModel) {
     this.#containerElement = containerElement;
@@ -88,6 +90,11 @@ export default class TripPointPresenter {
         this.#clearPointList({resetSortingType: true});
         this.#renderTripPoints();
         break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingMessageComponent);
+        this.#renderTripPoints();
+        break;
     }
   };
 
@@ -113,6 +120,10 @@ export default class TripPointPresenter {
     render (this.#noPoint, this.#containerElement);
   };
 
+  #renderLoadingMessage = () => {
+    render(this.#loadingMessageComponent, this.#containerElement, RenderPosition.AFTERBEGIN);
+  };
+
   #renderSort = () => {
     this.#sort = new SortView (this.#currentSortType);
     this.#sort.setSortTypeChangeHandler(this.#onSortTypeChange);
@@ -124,6 +135,10 @@ export default class TripPointPresenter {
   };
 
   #renderTripPoints = () => {
+    if (this.#isLoading) {
+      this.#renderLoadingMessage();
+      return;
+    }
     if (this.points.length === 0) {
       this.#renderNoPoint();
     } else {
@@ -139,6 +154,7 @@ export default class TripPointPresenter {
     this.#pointPresenter.clear();
 
     remove(this.#sort);
+    remove(this.#loadingMessageComponent);
 
     if (this.#noPoint) {
       remove(this.#noPoint);
