@@ -282,7 +282,8 @@ export default class PointEditView extends AbstractStatefulView {
   static parsePointToState = (pointRoute) => ({...pointRoute,
     isDisabled: false,
     isSaving: false,
-    isDeleting: false,});
+    isDeleting: false,
+  });
 
   static parseStateToPoint = (state) => {
     const pointRoute = {...state};

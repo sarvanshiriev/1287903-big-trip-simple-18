@@ -8,6 +8,12 @@ import { SortType,UserAction, UpdateType,FilterType } from '../const.js';
 import {sortPointDay,sortPointPrice} from '../utils/point-utils';
 import { filter } from '../utils/filter-utils.js';
 import LoadingMessageView from '../view/loading-message-view.js';
+import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
+
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
 export default class TripPointPresenter {
   #noPoint = null;
   #sort = null;
@@ -26,6 +32,7 @@ export default class TripPointPresenter {
   #currentSortType = SortType.DATE;
   #filterType = FilterType.EVERYTHING;
   #isLoading = true;
+  #uiBlocker = new UiBlocker(TimeLimit.LOWER_LIMIT, TimeLimit.UPPER_LIMIT);
 
   constructor (containerElement,pointModel,destinationsModel, offersByTypeModel,filterModel) {
     this.#containerElement = containerElement;
@@ -64,6 +71,7 @@ export default class TripPointPresenter {
   };
 
   #onViewAction = async (actionType, updateType, update) => {
+    this.#uiBlocker.block();
     switch (actionType) {
       case UserAction.UPDATE_POINT:
         this.#pointPresenter.get(update.id).setSaving();
@@ -90,6 +98,7 @@ export default class TripPointPresenter {
         }
         break;
     }
+    this.#uiBlocker.unblock();
   };
 
   #onModelPoint = (updateType, data) => {

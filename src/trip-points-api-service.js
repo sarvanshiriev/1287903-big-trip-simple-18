@@ -61,8 +61,8 @@ export default class TripPointsApiService extends ApiService {
   #adaptToServer = (point) => {
     const adaptedPoint = {...point,
       'base_price': Number(point.basePrice),
-      'date_from': point.dateFrom instanceof Date ? point.dateFrom.toISOString() : null,
-      'date_to': point.dateTo instanceof Date ? point.dateTo.toISOString() : null
+      'date_from': point.dateFrom,
+      'date_to': point.dateTo
     };
 
     delete adaptedPoint.basePrice;
