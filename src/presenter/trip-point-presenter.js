@@ -133,10 +133,10 @@ export default class TripPointPresenter {
     this.#renderTripPoints();
   };
 
-  #renderPoint = (pointRoute) => {
+  #renderPoint = (point) => {
     const pointPresenter = new PointPresenter(this.#pointList.element,this.#onViewAction,this.#onModeChange);
-    pointPresenter.init(pointRoute,this.#destinationsModel.destinations,this.#offersByTypeModel.offersByType);
-    this.#pointPresenter.set(pointRoute.id,pointPresenter);
+    pointPresenter.init(point,this.#destinationsModel.destinations,this.#offersByTypeModel.offersByType);
+    this.#pointPresenter.set(point.id,pointPresenter);
   };
 
   #renderNoPoint = () => {

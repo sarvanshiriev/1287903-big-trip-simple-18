@@ -8,7 +8,7 @@ const Mode = {
   EDITING: 'EDITING',
 };
 export default class PointPresenter {
-  #pointRoute = null;
+  #point = null;
   #destinations = null;
   #offers = null;
 
@@ -27,17 +27,17 @@ export default class PointPresenter {
     this.#changeMode = changeMode;
   }
 
-  init = (pointRoute,destinations,offers) => {
+  init = (point,destinations,offers) => {
 
-    this.#pointRoute = pointRoute;
+    this.#point = point;
     this.#destinations = destinations;
     this.#offers = offers;
 
     const prevPointRouteView = this.#pointRouteView;
     const prevFormEdit = this.#formEdit;
 
-    this.#pointRouteView = new PointRouteView(pointRoute,destinations,offers);
-    this.#formEdit = new FormEditView(pointRoute,destinations,offers);
+    this.#pointRouteView = new PointRouteView(point,destinations,offers);
+    this.#formEdit = new FormEditView(point,destinations,offers);
 
     this.#pointRouteView.setFormOpen(this.#setFormOpen);
     this.#formEdit.setFormCLose(this.#setFormCLose);
@@ -104,7 +104,7 @@ export default class PointPresenter {
 
   resetView = () => {
     if(this.#mode !== Mode.DEFAULT) {
-      this.#formEdit.reset(this.#pointRoute);
+      this.#formEdit.reset(this.#point);
       this.#replaceFormToPoint();
     }
   };
@@ -125,7 +125,7 @@ export default class PointPresenter {
   #onEscKeyDown = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
-      this.#formEdit.reset(this.#pointRoute);
+      this.#formEdit.reset(this.#point);
       this.#replaceFormToPoint();
     }
   };
@@ -135,7 +135,7 @@ export default class PointPresenter {
   };
 
   #setFormCLose = () => {
-    this.#formEdit.reset(this.#pointRoute);
+    this.#formEdit.reset(this.#point);
     this.#replaceFormToPoint();
   };
 

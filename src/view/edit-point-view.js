@@ -81,9 +81,11 @@ const createFormEditTemplate = (point,destinations,offersByType) => {
         </label>
         <input class="event__input  event__input--price" id="event-price-1" type="number" min="1" max="9999999"  name="event-price" value="${basePrice}">
       </div>
-      <button class="event__save-btn  btn  btn--blue" type="submit"${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
+      <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
       <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${isDeleting ? 'Deleting...' : 'Delete'}</button>
       <button class="event__rollup-btn" type="button">
+      <span class="visually-hidden">Open event</span>
+      </button>
       </header>
     <section class="event__details">
       <section class="event__section  event__section--offers">
@@ -279,17 +281,17 @@ export default class PointEditView extends AbstractStatefulView {
     this.#setDatepicker();
   };
 
-  static parsePointToState = (pointRoute) => ({...pointRoute,
+  static parsePointToState = (point) => ({...point,
     isDisabled: false,
     isSaving: false,
     isDeleting: false,
   });
 
   static parseStateToPoint = (state) => {
-    const pointRoute = {...state};
-    delete pointRoute.isDisabled;
-    delete pointRoute.isSaving;
-    delete pointRoute.isDeleting;
-    return pointRoute;
+    const point = {...state};
+    delete point.isDisabled;
+    delete point.isSaving;
+    delete point.isDeleting;
+    return point;
   };
 }

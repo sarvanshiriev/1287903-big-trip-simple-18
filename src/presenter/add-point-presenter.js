@@ -85,6 +85,5 @@ export default class AddPointPresenter {
 
   #onFormSubmit = (point) => {
     this.#changeData(UserAction.ADD_POINT, UpdateType.MINOR, point);
-    this.destroy();
   };
 }

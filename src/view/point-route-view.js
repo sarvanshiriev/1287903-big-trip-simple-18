@@ -17,8 +17,8 @@ const createOffersTemplate = (offersByType, type, offers) => {
   }).join('');
 };
 
-const createPointRouteTemplate = (pointRoute,destinations,offersByType) => {
-  const {basePrice,dateFrom,dateTo,destination,type,offers} = pointRoute;
+const createPointRouteTemplate = (point,destinations,offersByType) => {
+  const {basePrice,dateFrom,dateTo,destination,type,offers} = point;
   const destinationName = destinations.find((element) => element.id === destination).name;
 
   return (
@@ -53,19 +53,19 @@ const createPointRouteTemplate = (pointRoute,destinations,offersByType) => {
 
 export default class PointRouteView extends AbstractView {
 
-  #pointRoute = null;
+  #point = null;
   #destinations = null;
   #offersByType = null;
 
-  constructor (pointRoute,destinations,offersByType) {
+  constructor (point,destinations,offersByType) {
     super();
-    this.#pointRoute = pointRoute;
+    this.#point = point;
     this.#destinations = destinations;
     this.#offersByType = offersByType;
   }
 
   get template() {
-    return createPointRouteTemplate(this.#pointRoute,this.#destinations,this.#offersByType);
+    return createPointRouteTemplate(this.#point,this.#destinations,this.#offersByType);
   }
 
   setFormOpen = (callback) => {
