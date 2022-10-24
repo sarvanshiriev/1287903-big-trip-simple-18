@@ -56,6 +56,7 @@ export default class PointPresenter {
 
     if (this.#mode === Mode.EDITING) {
       replace(this.#formEdit,prevFormEdit);
+      this.#mode = Mode.DEFAULT;
     }
     remove(prevPointRouteView);
     remove(prevFormEdit);
@@ -64,6 +65,41 @@ export default class PointPresenter {
   destroy = () => {
     remove(this.#pointRouteView);
     remove(this.#formEdit);
+  };
+
+  setSaving = () => {
+    if (this.#mode === Mode.EDITING) {
+      this.#formEdit.updateElement({
+        isDisabled: true,
+        isSaving: true,
+      });
+    }
+  };
+
+  setDeleting = () => {
+    if (this.#mode === Mode.EDITING) {
+      this.#formEdit.updateElement({
+        isDisabled: true,
+        isDeleting: true,
+      });
+    }
+  };
+
+  setAborting = () => {
+    if (this.#mode === Mode.DEFAULT) {
+      this.#formEdit.shake();
+      return;
+    }
+
+    const resetFormState = () => {
+      this.#formEdit.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+
+    this.#formEdit.shake(resetFormState);
   };
 
   resetView = () => {
@@ -106,7 +142,6 @@ export default class PointPresenter {
 
   #setFormSubmit = (update, destinations, offersByType) => {
     this.#changeData(UserAction.UPDATE_POINT, UpdateType.MINOR, update, destinations, offersByType);
-    this.#replaceFormToPoint();
   };
 
   #setFormDelete = (point) => {
