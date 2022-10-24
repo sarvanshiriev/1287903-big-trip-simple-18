@@ -66,12 +66,15 @@ export default class TripPointPresenter {
   #onViewAction = (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.UPDATE_POINT:
+        this.#pointPresenter.get(update.id).setSaving();
         this.#pointModel.updatePoint(updateType, update);
         break;
       case UserAction.ADD_POINT:
+        this.#addPointPresenter.setSaving();
         this.#pointModel.addPoint(updateType, update);
         break;
       case UserAction.DELETE_POINT:
+        this.#pointPresenter.get(update.id).setDeleting();
         this.#pointModel.deletePoint(updateType, update);
         break;
     }
