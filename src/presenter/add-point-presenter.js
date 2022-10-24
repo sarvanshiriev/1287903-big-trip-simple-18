@@ -2,9 +2,6 @@ import { render, remove, RenderPosition } from '../framework/render.js';
 import { UserAction, UpdateType } from '../const.js';
 import PointAddView from '../view/add-point-view.js';
 
-import { customAlphabet } from 'nanoid';
-const nanoid = customAlphabet('1234567890', 10);
-
 export default class AddPointPresenter {
   #destinations = null;
   #offersByType = null;
@@ -87,7 +84,7 @@ export default class AddPointPresenter {
   };
 
   #onFormSubmit = (point) => {
-    this.#changeData(UserAction.ADD_POINT, UpdateType.MINOR, {id: nanoid(), ...point});
+    this.#changeData(UserAction.ADD_POINT, UpdateType.MINOR, point);
     this.destroy();
   };
 }
